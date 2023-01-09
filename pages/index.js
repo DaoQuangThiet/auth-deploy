@@ -89,43 +89,45 @@ const PRODUCT_QUERY = gql`
 const Home = (props) => {
   const { products, productseller } = props;
   return (
-    <Box>
-      <SwipeableTextMobileStepper />
-      <DealsOfDay />
-      <Container>
-        <Tab />
-        <Grid
-          container
-          spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
-          columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
-        >
-          {products.length
-            ? products.map((product) => (
-                <Product key={product.id} product={product} />
-              ))
-            : ""}
-        </Grid>
-      </Container>
+    <AppProvider>
+      <Box>
+        <SwipeableTextMobileStepper />
+        <DealsOfDay />
+        <Container>
+          <Tab />
+          <Grid
+            container
+            spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
+            columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
+          >
+            {products.length
+              ? products.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))
+              : ""}
+          </Grid>
+        </Container>
 
-      <NewImageList />
-      <Container>
-        <TabSeller />
-        <Grid
-          container
-          spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
-          columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
-        >
-          {productseller.length
-            ? productseller.map((product) => (
-                <Product key={product.id} product={product} />
-              ))
-            : ""}
-        </Grid>
-      </Container>
-      <SellerImageList />
-      <Logo />
-      <NameForm />
-    </Box>
+        <NewImageList />
+        <Container>
+          <TabSeller />
+          <Grid
+            container
+            spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
+            columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
+          >
+            {productseller.length
+              ? productseller.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))
+              : ""}
+          </Grid>
+        </Container>
+        <SellerImageList />
+        <Logo />
+        <NameForm />
+      </Box>
+    </AppProvider>
   );
 };
 
