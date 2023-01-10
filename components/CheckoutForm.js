@@ -267,10 +267,14 @@ const CheckoutForm = (props) => {
           onSubmit={handleFormSubmit}
           className={classes.checkoutForm}
         >
-          <Grid iteam className={classes.containerForm} >
-            <Typography variant="h3">Checkout Page</Typography>
+          <Typography variant="h3">Checkout Page</Typography>
+          <Grid iteam className={classes.containerForm}>
+            {input?.billingDifferentThanShipping ? (
+              <Box className="billing-details-container">
+                <Typography variant="h4">Billing Details</Typography>
+              </Box>
+            ) : null}
             <Paper className={classes.contactNumber}>
-              <Typography variant="h4">Billing Details</Typography>
               <MenuList>
                 <MenuItem sx={{ marginBottom: "10px" }}>
                   <ListItemText>
