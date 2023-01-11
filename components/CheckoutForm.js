@@ -1,11 +1,22 @@
-import { Box, FormControl, Grid, MenuList, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  Grid,
+  InputAdornment,
+  Link,
+  MenuList,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import AddIcon from "@mui/icons-material/Add";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import Banner from "../assets/img/banner_page.png";
@@ -14,10 +25,27 @@ import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import client from "../libs/apollo/ApolloClient";
 import { reach } from "yup";
-import { getFormattedCart } from "../function";
+import { createCheckoutData, getFormattedCart } from "../function";
 import GET_CART from "../libs/queries/get-cart";
 import CHECKOUT_MUTATION from "../libs/mutations/checkout";
 import CLEAR_CART_MUTATION from "../libs/mutations/clear-cart";
+import Address from "./checkout/Address";
+import Divider from "@mui/material/Divider";
+import {
+  TabPanelUnstyled,
+  TabsListUnstyled,
+  TabsUnstyled,
+  TabUnstyled,
+} from "@mui/base";
+import { Input } from "@material-ui/core";
+import PaymentIcon from "@mui/icons-material/Payment";
+import {
+  handleBillingDifferentThanShipping,
+  handleCreateAccount,
+  handleStripeCheckout,
+  setStatesForCountry,
+} from "../utils/checkout";
+import CheckboxField from "./checkout/form-elements/CheckboxField";
 
 const useStyles = makeStyles({
   page: {
@@ -150,6 +178,8 @@ const defaultCustomerInfo = {
 };
 
 const CheckoutForm = (props) => {
+  const { existingCart } = props;
+  const { billingCountries, shippingCountries } = {};
   const classes = useStyles();
   const initialState = {
     billing: {
@@ -177,9 +207,9 @@ const CheckoutForm = (props) => {
   const [createdOrderData, setCreatedOrderData] = useState({});
 
   // Get Cart Data.
-  const data = useQuery(GET_CART, {
+  const { data } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
-    onCompleted: (data) => {
+    onCompleted: () => {
       // Update cart in the localStorage.
       const updatedCart = getFormattedCart(data);
       console.log(updatedCart);
@@ -259,6 +289,64 @@ const CheckoutForm = (props) => {
      */
     setOrderData(checkOutData);
   };
+  const handleOnChange = async (
+    event,
+    isShipping = false,
+    isBillingOrShipping = false
+  ) => {
+    const { target } = event || {};
+
+    if ("createAccount" === target.name) {
+      handleCreateAccount(input, setInput, target);
+    } else if ("billingDifferentThanShipping" === target.name) {
+      handleBillingDifferentThanShipping(input, setInput, target);
+    } else if (isBillingOrShipping) {
+      if (isShipping) {
+        await handleShippingChange(target);
+      } else {
+        await handleBillingChange(target);
+      }
+    } else {
+      const newState = { ...input, [target.name]: target.value };
+      setInput(newState);
+    }
+  };
+
+  const handleShippingChange = async (target) => {
+    const newState = {
+      ...input,
+      shipping: { ...input?.shipping, [target.name]: target.value },
+    };
+    setInput(newState);
+    await setStatesForCountry(
+      target,
+      setTheShippingStates,
+      setIsFetchingShippingStates
+    );
+  };
+
+  const handleBillingChange = async (target) => {
+    const newState = {
+      ...input,
+      billing: { ...input?.billing, [target.name]: target.value },
+    };
+    setInput(newState);
+    await setStatesForCountry(
+      target,
+      setTheBillingStates,
+      setIsFetchingBillingStates
+    );
+  };
+  useEffect(() => {
+    async function FetchData() {
+      if (null !== orderData) {
+        // Call the checkout mutation when the value for orderData changes/updates.
+        await checkout();
+      }
+    }
+    FetchData();
+  }, [orderData]);
+  const isOrderProcessing = checkoutLoading || isStripeOrderProcessing;
 
   return (
     <>
@@ -266,15 +354,48 @@ const CheckoutForm = (props) => {
         <FormControl
           onSubmit={handleFormSubmit}
           className={classes.checkoutForm}
+          xs={{ display: "flex" }}
         >
-          <Typography variant="h3">Checkout Page</Typography>
-          <Grid iteam className={classes.containerForm}>
+          <Grid iteam lg={8}>
+            <Typography variant="h3">Checkout Page</Typography>
+            <Box className="billing-details-container">
+              <Typography variant="h4">Shipping Details</Typography>
+              <Address
+                states={theShippingStates}
+                countries={shippingCountries}
+                input={input?.shipping}
+                handleOnChange={(event) => handleOnChange(event, true, true)}
+                isFetchingStates={isFetchingShippingStates}
+                isShipping
+                isBillingOrShipping
+              />
+            </Box>
+            <Box>
+              <CheckboxField
+                name="billingDifferentThanShipping"
+                type="checkbox"
+                checked={input?.billingDifferentThanShipping}
+                handleOnChange={handleOnChange}
+                label="Billing different than shipping"
+                containerClassNames="mb-4 pt-4"
+              />
+            </Box>
             {input?.billingDifferentThanShipping ? (
               <Box className="billing-details-container">
                 <Typography variant="h4">Billing Details</Typography>
+                <Address
+                  states={theBillingStates}
+                  countries={billingCountries}
+                  input={input?.billing}
+                  handleOnChange={(event) => handleOnChange(event, false, true)}
+                  isFetchingStates={isFetchingBillingStates}
+                  isShipping={false}
+                  isBillingOrShipping
+                />
               </Box>
             ) : null}
-            <Paper className={classes.contactNumber}>
+
+            {/* <Paper className={classes.contactNumber}>
               <MenuList>
                 <MenuItem sx={{ marginBottom: "10px" }}>
                   <ListItemText>
@@ -301,8 +422,8 @@ const CheckoutForm = (props) => {
                   <input className={classes.formInput} type="text" />
                 </Box>
               </Box>
-            </Paper>
-            <Paper className={classes.billingAddress}>
+            </Paper> */}
+            {/* <Paper className={classes.billingAddress}>
               <MenuList>
                 <MenuItem sx={{ marginBottom: "10px" }}>
                   <ListItemText>
@@ -329,8 +450,8 @@ const CheckoutForm = (props) => {
                   <input className={classes.formInput} type="text" />
                 </Box>
               </Box>
-            </Paper>
-            <Paper className={classes.shippingAddress}>
+            </Paper> */}
+            {/* <Paper className={classes.shippingAddress}>
               <MenuList>
                 <MenuItem sx={{ marginBottom: "10px" }}>
                   <ListItemText>
@@ -357,8 +478,8 @@ const CheckoutForm = (props) => {
                   <input className={classes.formInput} type="text" />
                 </Box>
               </Box>
-            </Paper>
-            <Paper className={classes.deliverySchedule}>
+            </Paper> */}
+            {/* <Paper className={classes.deliverySchedule}>
               <MenuList>
                 <MenuItem sx={{ marginBottom: "10px" }}>
                   <ListItemText>
@@ -384,7 +505,174 @@ const CheckoutForm = (props) => {
                   <input className={classes.formInput} type="text" />
                 </Box>
               </Box>
-            </Paper>
+            </Paper> */}
+          </Grid>
+          <Grid iteam lg={4}>
+            <Box className={classes.payment}>
+              <Typography variant="h4">Your Order</Typography>
+              {existingCart?.products?.length &&
+                existingCart.products.map((item) => (
+                  <MenuItem sx={{ marginBottom: "10px" }} key={item}>
+                    <ListItemText>
+                      <Typography variant="div">
+                        {item.qty} x {item.name}
+                      </Typography>
+                    </ListItemText>
+                    <Typography variant="div">${item.totalPrice}</Typography>
+                  </MenuItem>
+                ))}
+
+              <Divider />
+              <MenuList>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography variant="div">Sub Total</Typography>
+                  </ListItemText>
+                  <Typography variant="div">
+                    ${existingCart.totalProductsPrice}
+                  </Typography>
+                </MenuItem>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography variant="div">Tax</Typography>
+                  </ListItemText>
+                  <Typography variant="div">$0.00</Typography>
+                </MenuItem>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography variant="div">Shipping</Typography>
+                  </ListItemText>
+                  <Typography variant="div">$0.00</Typography>
+                </MenuItem>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography>
+                      <Link>Do you have Coupon?</Link>
+                    </Typography>
+                  </ListItemText>
+                </MenuItem>
+              </MenuList>
+
+              <Divider />
+              <Divider />
+
+              <MenuList>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Sub Total
+                    </Typography>
+                  </ListItemText>
+                  <Typography sx={{ fontWeight: "600" }}>
+                    ${existingCart.totalProductsPrice}
+                  </Typography>
+                </MenuItem>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography variant="div">Wallet points</Typography>
+                  </ListItemText>
+                  <Typography variant="div">0</Typography>
+                </MenuItem>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography variant="div">Wallet currency</Typography>
+                  </ListItemText>
+                  <Typography variant="div">$0.00</Typography>
+                </MenuItem>
+                <MenuItem sx={{ marginBottom: "10px" }}>
+                  <ListItemText>
+                    <Typography>
+                      <Checkbox color="default" />
+                      <Link>Do you have Coupon?</Link>
+                    </Typography>
+                  </ListItemText>
+                </MenuItem>
+              </MenuList>
+              <Paper sx={{ marginTop: "15px" }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    textAlign: "center",
+                    marginBottom: "15px",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "600" }}>
+                    Choose Payment Method
+                  </Typography>
+                  <Box>
+                    <TabsUnstyled defaultValue={0}>
+                      <TabsListUnstyled className={classes.tabListPay}>
+                        <TabUnstyled className={classes.tabPay}>
+                          Stripe
+                        </TabUnstyled>
+                        <TabUnstyled className={classes.tabPay}>
+                          Cash On Delivery
+                        </TabUnstyled>
+                      </TabsListUnstyled>
+                      <TabPanelUnstyled
+                        className={classes.tabPanePay}
+                        value={0}
+                      >
+                        <FormControl variant="standard">
+                          <Input
+                            id="input-with-icon-adornment"
+                            startAdornment={
+                              <InputAdornment position="start">
+                                <PaymentIcon />
+                                số thẻ
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                      </TabPanelUnstyled>
+                      <TabPanelUnstyled
+                        className={classes.tabPanePay}
+                        value={1}
+                      >
+                        <FormControl variant="standard">
+                          <Input
+                            id="input-with-icon-adornment"
+                            startAdornment={
+                              <InputAdornment position="start">
+                                <PaymentIcon />
+                                số thẻ
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                      </TabPanelUnstyled>
+                    </TabsUnstyled>
+                    <Box
+                      sx={{
+                        textAlign: "center",
+                        paddingBottom: "15px",
+                        paddingTop: "10px",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        sx={{ backgroundColor: "#40c6ff" }}
+                      >
+                        Success
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+              <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
+                <Button
+                  disabled={isOrderProcessing}
+                  type="submit"
+                  // onClick={handleSubmit}
+                  sx={{ width: "100%", backgroundColor: "#40c6ff" }}
+                  variant="contained"
+                >
+                  Place Order
+                </Button>
+              </Stack>
+              {isOrderProcessing && <p>Processing Order...</p>}
+              {requestError && <p>Error : {requestError} : Please try again</p>}
+            </Box>
           </Grid>
         </FormControl>
       ) : null}

@@ -32,6 +32,7 @@ import gql from "graphql-tag";
 import client from "../libs/apollo/ApolloClient";
 import { ApolloProvider } from "@apollo/client";
 import GET_CART from "../libs/queries/get-cart";
+import GET_COUNTRIES from "../libs/queries/get-countries";
 
 const useStyles = makeStyles({
   page: {
@@ -158,10 +159,10 @@ const Checkout = (props) => {
     existingCart = localStorage.getItem("woo-next-cart");
     existingCart = JSON.parse(existingCart);
   }
-  const handleSubmit = (value) => {
-    router.push(`/thankiu`);
-    localStorage.removeItem("woo-next-cart");
-  };
+  // const handleSubmit = (value) => {
+  //   router.push(`/thankiu`);
+  //   localStorage.removeItem("woo-next-cart");
+  // };
   // let existingCart = localStorage ? localStorage.getItem('woo-next-cart'): '';
   // existingCart = JSON.parse(existingCart);
   // console.warn(existingCart);
@@ -207,169 +208,7 @@ const Checkout = (props) => {
         </Box>
         <Container>
           <Box className={classes.mainCheckout}>
-            <CheckoutForm />
-            <Grid iteam lg={4}>
-              <Box className={classes.payment}>
-                {existingCart?.products?.length &&
-                  existingCart.products.map((item) => (
-                    <MenuItem sx={{ marginBottom: "10px" }} key={item}>
-                      <ListItemText>
-                        <Typography variant="div">
-                          {item.qty} x {item.name}
-                        </Typography>
-                      </ListItemText>
-                      <Typography variant="div">${item.totalPrice}</Typography>
-                    </MenuItem>
-                  ))}
-
-                <Divider />
-                <MenuList>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography variant="div">Sub Total</Typography>
-                    </ListItemText>
-                    <Typography variant="div">
-                      ${existingCart.totalProductsPrice}
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography variant="div">Tax</Typography>
-                    </ListItemText>
-                    <Typography variant="div">$0.00</Typography>
-                  </MenuItem>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography variant="div">Shipping</Typography>
-                    </ListItemText>
-                    <Typography variant="div">$0.00</Typography>
-                  </MenuItem>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography>
-                        <Link>Do you have Coupon?</Link>
-                      </Typography>
-                    </ListItemText>
-                  </MenuItem>
-                </MenuList>
-
-                <Divider />
-                <Divider />
-
-                <MenuList>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Sub Total
-                      </Typography>
-                    </ListItemText>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      ${existingCart.totalProductsPrice}
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography variant="div">Wallet points</Typography>
-                    </ListItemText>
-                    <Typography variant="div">0</Typography>
-                  </MenuItem>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography variant="div">Wallet currency</Typography>
-                    </ListItemText>
-                    <Typography variant="div">$0.00</Typography>
-                  </MenuItem>
-                  <MenuItem sx={{ marginBottom: "10px" }}>
-                    <ListItemText>
-                      <Typography>
-                        <Checkbox {...label} color="default" />
-                        <Link>Do you have Coupon?</Link>
-                      </Typography>
-                    </ListItemText>
-                  </MenuItem>
-                </MenuList>
-                <Paper sx={{ marginTop: "15px" }}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      textAlign: "center",
-                      marginBottom: "15px",
-                    }}
-                  >
-                    <Typography sx={{ fontWeight: "600" }}>
-                      Choose Payment Method
-                    </Typography>
-                    <Box>
-                      <TabsUnstyled defaultValue={0}>
-                        <TabsListUnstyled className={classes.tabListPay}>
-                          <TabUnstyled className={classes.tabPay}>
-                            Stripe
-                          </TabUnstyled>
-                          <TabUnstyled className={classes.tabPay}>
-                            Cash On Delivery
-                          </TabUnstyled>
-                        </TabsListUnstyled>
-                        <TabPanelUnstyled
-                          className={classes.tabPanePay}
-                          value={0}
-                        >
-                          <FormControl variant="standard">
-                            <Input
-                              id="input-with-icon-adornment"
-                              startAdornment={
-                                <InputAdornment position="start">
-                                  <PaymentIcon />
-                                  số thẻ
-                                </InputAdornment>
-                              }
-                            />
-                          </FormControl>
-                        </TabPanelUnstyled>
-                        <TabPanelUnstyled
-                          className={classes.tabPanePay}
-                          value={1}
-                        >
-                          <FormControl variant="standard">
-                            <Input
-                              id="input-with-icon-adornment"
-                              startAdornment={
-                                <InputAdornment position="start">
-                                  <PaymentIcon />
-                                  số thẻ
-                                </InputAdornment>
-                              }
-                            />
-                          </FormControl>
-                        </TabPanelUnstyled>
-                      </TabsUnstyled>
-                      <Box
-                        sx={{
-                          textAlign: "center",
-                          paddingBottom: "15px",
-                          paddingTop: "10px",
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          sx={{ backgroundColor: "#40c6ff" }}
-                        >
-                          Success
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Paper>
-                <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
-                  <Button
-                    onClick={handleSubmit}
-                    sx={{ width: "100%", backgroundColor: "#40c6ff" }}
-                    variant="contained"
-                  >
-                    Success
-                  </Button>
-                </Stack>
-              </Box>
-            </Grid>
+            <CheckoutForm existingCart={existingCart} />
           </Box>
         </Container>
       </AppProvider>
