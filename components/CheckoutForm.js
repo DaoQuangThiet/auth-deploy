@@ -46,6 +46,8 @@ import {
   setStatesForCountry,
 } from "../utils/checkout";
 import CheckboxField from "./checkout/form-elements/CheckboxField";
+import validateAndSanitizeCheckoutForm from "./validator/checkout";
+import OrderSuccess from "./checkout/OrderSuccess";
 
 const useStyles = makeStyles({
   page: {
@@ -351,11 +353,7 @@ const CheckoutForm = (props) => {
   return (
     <>
       {cart ? (
-        <FormControl
-          onSubmit={handleFormSubmit}
-          className={classes.checkoutForm}
-          xs={{ display: "flex" }}
-        >
+        <form onSubmit={handleFormSubmit} className={classes.checkoutForm}>
           <Grid iteam lg={8}>
             <Typography variant="h3">Checkout Page</Typography>
             <Box className="billing-details-container">
@@ -674,8 +672,9 @@ const CheckoutForm = (props) => {
               {requestError && <p>Error : {requestError} : Please try again</p>}
             </Box>
           </Grid>
-        </FormControl>
+        </form>
       ) : null}
+      <OrderSuccess response={checkoutResponse} />
     </>
   );
 };

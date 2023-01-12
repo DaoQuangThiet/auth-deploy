@@ -14,7 +14,7 @@ const CountrySelection = ({ input, handleOnChange, countries, isShipping }) => {
     <Box sx={{ display: "block", padding: "15px" }} className="mb-3">
       <Typography className="leading-7 text-sm text-gray-700" htmlFor={inputId}>
         Country
-        <Abbr required />
+        {/* <Abbr required /> */}
       </Typography>
       <div className="relative w-full border-none">
         <select
@@ -43,7 +43,7 @@ const CountrySelection = ({ input, handleOnChange, countries, isShipping }) => {
           <SvgArrowDown width={24} height={24} className="fill-current" />
         </span> */}
       </div>
-      <Error errors={errors} fieldName={"country"} />
+      {/* <Error errors={errors} fieldName={"country"} /> */}
     </Box>
   );
 };
