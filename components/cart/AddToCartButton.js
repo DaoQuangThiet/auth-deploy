@@ -40,7 +40,6 @@ const useStyles = makeStyles({
 const AddToCartButton = (props) => {
   const classes = useStyles();
   const { product } = props;
-  console.log(product);
   const [cart, setCart] = useContext(AppContext);
   const [showViewCart, setShowViewCart] = useState(false);
   const [requestError, setRequestError] = useState(null);
