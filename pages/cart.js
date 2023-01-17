@@ -7,6 +7,8 @@ import Banner from "../assets/img/banner_page.png";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Grid from "@mui/material/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+import { ApolloClient, ApolloProvider } from "@apollo/client";
+import client from "../libs/apollo/ApolloClient";
 
 const useStyles = makeStyles({
   page: {
@@ -51,48 +53,50 @@ const Cart = (props) => {
 
   return (
     <AppProvider>
-      <Box className={classes.page}>
-        <Container>
-          <Box className={classes.titlePage}>
-            <Grid item lg={6}>
-              <Box>
-                <Typography
-                  className={classes.textTile}
-                  component="h3"
-                  variant="h3"
-                >
-                  Cart
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item lg={6}>
-              <Box className={classes.rightTextPage}>
-                <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
+      <ApolloProvider client={client}>
+        <Box className={classes.page}>
+          <Container>
+            <Box className={classes.titlePage}>
+              <Grid item lg={6}>
+                <Box>
                   <Typography
-                    className={classes.titleText}
-                    component="h6"
-                    variant="h6"
-                  >
-                    Home
-                  </Typography>
-
-                  <Typography
-                    className={classes.titleText}
-                    component="h6"
-                    variant="h6"
+                    className={classes.textTile}
+                    component="h3"
+                    variant="h3"
                   >
                     Cart
                   </Typography>
-                </Breadcrumbs>
-              </Box>
-            </Grid>
-          </Box>
+                </Box>
+              </Grid>
+              <Grid item lg={6}>
+                <Box className={classes.rightTextPage}>
+                  <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
+                    <Typography
+                      className={classes.titleText}
+                      component="h6"
+                      variant="h6"
+                    >
+                      Home
+                    </Typography>
+
+                    <Typography
+                      className={classes.titleText}
+                      component="h6"
+                      variant="h6"
+                    >
+                      Cart
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+              </Grid>
+            </Box>
+          </Container>
+        </Box>
+        <Container>
+          <CartItemsContainer />
+          {props.children}
         </Container>
-      </Box>
-      <Container>
-        <CartItemsContainer />
-        {props.children}
-      </Container>
+      </ApolloProvider>
     </AppProvider>
   );
 };

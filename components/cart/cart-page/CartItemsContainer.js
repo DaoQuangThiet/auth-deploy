@@ -7,7 +7,7 @@ import CartItem from "./Cartitem";
 import { v4 } from "uuid";
 import { Button, Grid } from "@mui/material";
 import { useMutation, useQuery } from "@apollo/client";
-import { removeItemFromCart } from "../../../function";
+import { getUpdatedItems, removeItemFromCart } from "../../../function";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -31,11 +31,11 @@ import TextField from "@material-ui/core/TextField";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import GET_CART from "../../../libs/queries/get-cart";
+import UPDATE_CART from "../../../libs/mutations/update-cart";
+import CLEAR_CART_MUTATION from "../../../libs/mutations/clear-cart";
+import { isEmpty } from "lodash";
 
-//import UPDATE_CART from "../../../mutations/update-cart";
-//import GET_CART from "../../../queries/get-cart";
-//import CLEAR_CART_MUTATION from "../../../mutations/clear-cart";
-// import { isEmpty } from 'lodash'
 const style = {
   position: "absolute",
   top: "50%",
@@ -87,50 +87,61 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 const CartItemsContainer = () => {
-  // @TODO wil use it in future variations of the project.
   const [cart, setCart] = useContext(AppContext);
-  console.warn(cart);
-  //const [requestError, setRequestError] = useState(null);
+  const [requestError, setRequestError] = useState(null);
 
   // Get Cart Data.
-  // const { loading, error, data, refetch } = useQuery(GET_CART, {
-  //     notifyOnNetworkStatusChange: true,
-  //     onCompleted: () => {
+  const { loading, error, data, refetch } = useQuery(GET_CART, {
+    notifyOnNetworkStatusChange: true,
+    onCompleted: () => {
+      // Update cart in the localStorage.
+      const updatedCart = getFormattedCart(data);
+      localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
 
-  //         // Update cart in the localStorage.
-  //         const updatedCart = getFormattedCart(data);
-  //         localStorage.setItem('woo-next-cart', JSON.stringify(updatedCart));
-
-  //         // Update cart data in React Context.
-  //         setCart(updatedCart);
-  //     }
-  // });
-
-  // Update Cart Mutation.
-  // const [updateCart, { data: updateCartResponse, loading: updateCartProcessing, error: updateCartError }] = useMutation(UPDATE_CART, {
-  //     onCompleted: () => {
-  //         refetch();
-  //     },
-  //     onError: (error) => {
-  //         if (error) {
-  //             const errorMessage = error?.graphQLErrors?.[0]?.message ? error.graphQLErrors[0].message : '';
-  //             setRequestError(errorMessage);
-  //         }
-  //     }
-  // });
+      // Update cart data in React Context.
+      setCart(updatedCart);
+    },
+  });
 
   // Update Cart Mutation.
-  // const [clearCart, { data: clearCartRes, loading: clearCartProcessing, error: clearCartError }] = useMutation(CLEAR_CART_MUTATION, {
-  //     onCompleted: () => {
-  //         refetch();
-  //     },
-  //     onError: (error) => {
-  //         if (error) {
-  //             const errorMessage = !isEmpty(error?.graphQLErrors?.[0]) ? error.graphQLErrors[0]?.message : '';
-  //             setRequestError(errorMessage);
-  //         }
-  //     }
-  // });
+  const [
+    updateCart,
+    {
+      data: updateCartResponse,
+      loading: updateCartProcessing,
+      error: updateCartError,
+    },
+  ] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      refetch();
+    },
+    onError: (error) => {
+      if (error) {
+        const errorMessage = error?.graphQLErrors?.[0]?.message
+          ? error.graphQLErrors[0].message
+          : "";
+        setRequestError(errorMessage);
+      }
+    },
+  });
+
+  // Clear Cart Mutation.
+  const [
+    clearCart,
+    { data: clearCartRes, loading: clearCartProcessing, error: clearCartError },
+  ] = useMutation(CLEAR_CART_MUTATION, {
+    onCompleted: () => {
+      refetch();
+    },
+    onError: (error) => {
+      if (error) {
+        const errorMessage = !isEmpty(error?.graphQLErrors?.[0])
+          ? error.graphQLErrors[0]?.message
+          : "";
+        setRequestError(errorMessage);
+      }
+    },
+  });
 
   /*
    * Handle remove product click.
@@ -140,29 +151,41 @@ const CartItemsContainer = () => {
    *
    * @return {void}
    */
-  const handleRemoveProductClick = (event, productId) => {
-    const updatedCart = removeItemFromCart(productId);
+  const handleRemoveProductClick = (event, cartKey, products) => {
+    event.stopPropagation();
+    if (products.length) {
+      // By passing the newQty to 0 in updateCart Mutation, it will remove the item.
+      const newQty = 0;
+      const updatedItems = getUpdatedItems(products, newQty, cartKey);
 
-    setCart(updatedCart);
+      updateCart({
+        variables: {
+          input: {
+            clientMutationId: v4(),
+            items: updatedItems,
+          },
+        },
+      });
+    }
   };
+
   // Clear the entire cart.
-  // const handleClearCart = (event) => {
+  const handleClearCart = (event) => {
+    event.stopPropagation();
 
-  //     event.stopPropagation();
+    if (clearCartProcessing) {
+      return;
+    }
 
-  //     if (clearCartProcessing) {
-  //         return;
-  //     }
-
-  //     clearCart({
-  //         variables: {
-  //             input: {
-  //                 clientMutationId: v4(),
-  //                 all: true
-  //             }
-  //         },
-  //     });
-  // }
+    clearCart({
+      variables: {
+        input: {
+          clientMutationId: v4(),
+          all: true,
+        },
+      },
+    });
+  };
   const router = useRouter();
   const classes = useStyles_cart();
   const [open, setOpen] = React.useState(false);
@@ -192,6 +215,15 @@ const CartItemsContainer = () => {
           <div className={classes.wooNextCartWrapper}>
             <Grid item lg={8}>
               <Box className={classes.tableCart}>
+                <Button
+                  variant="contained"
+                  onClick={(event) => handleClearCart(event)}
+                  disabled={clearCartProcessing}
+                >
+                  Clear Cart
+                </Button>
+                {clearCartProcessing ? <p>Clearing...</p> : ""}
+                {updateCartProcessing ? <p>Updating...</p> : null}
                 <TableContainer className="table table-hover">
                   <Table>
                     <TableHead>
@@ -249,8 +281,10 @@ const CartItemsContainer = () => {
                           <CartItem
                             key={item.productId}
                             item={item}
+                            products={cart.products}
+                            updateCartProcessing={updateCartProcessing}
                             handleRemoveProductClick={handleRemoveProductClick}
-                            setCart={setCart}
+                            updateCart={updateCart}
                           />
                         ))}
                     </TableBody>
@@ -273,7 +307,7 @@ const CartItemsContainer = () => {
                   <List>
                     <ListItem>
                       <ListItemText>Subtotal:</ListItemText>
-                      <Typography>${cart.totalProductsPrice}</Typography>
+                      <Typography>{cart.totalProductsPrice}</Typography>
                     </ListItem>
                     <Divider />
                     <ListItem>
@@ -311,7 +345,7 @@ const CartItemsContainer = () => {
                     <Divider />
                     <ListItem>
                       <ListItemText>Total:</ListItemText>
-                      <Typography>${cart.totalProductsPrice}</Typography>
+                      <Typography>{cart.totalProductsPrice}</Typography>
                     </ListItem>
                   </List>
                   <Box className={classes.buttonCheckout}>
@@ -399,7 +433,14 @@ const CartItemsContainer = () => {
               </Box>
             </Grid>
             {/* Display Errors if any */}
-            {/* {requestError ? <div className="row woo-next-cart-total-container mt-5"> {requestError} </div> : ''} */}
+            {requestError ? (
+              <div className="row woo-next-cart-total-container mt-5">
+                {" "}
+                {requestError}{" "}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         ) : (
           <div className="container mx-auto my-32 px-4 xl:px-0">
