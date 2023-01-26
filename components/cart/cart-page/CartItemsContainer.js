@@ -7,7 +7,11 @@ import CartItem from "./Cartitem";
 import { v4 } from "uuid";
 import { Button, Grid } from "@mui/material";
 import { useMutation, useQuery } from "@apollo/client";
-import { getUpdatedItems, removeItemFromCart } from "../../../function";
+import {
+  getFormattedCart,
+  getUpdatedItems,
+  removeItemFromCart,
+} from "../../../function";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -100,6 +104,7 @@ const CartItemsContainer = () => {
 
       // Update cart data in React Context.
       setCart(updatedCart);
+      console.log(updatedCart);
     },
   });
 
@@ -157,6 +162,7 @@ const CartItemsContainer = () => {
       // By passing the newQty to 0 in updateCart Mutation, it will remove the item.
       const newQty = 0;
       const updatedItems = getUpdatedItems(products, newQty, cartKey);
+      console.log(updatedItems);
 
       updateCart({
         variables: {
@@ -209,19 +215,12 @@ const CartItemsContainer = () => {
     },
   });
   return (
-    <AppProvider>
+    <>
       <div className={classes.cartMain}>
         {cart ? (
           <div className={classes.wooNextCartWrapper}>
             <Grid item lg={8}>
               <Box className={classes.tableCart}>
-                <Button
-                  variant="contained"
-                  onClick={(event) => handleClearCart(event)}
-                  disabled={clearCartProcessing}
-                >
-                  Clear Cart
-                </Button>
                 {clearCartProcessing ? <p>Clearing...</p> : ""}
                 {updateCartProcessing ? <p>Updating...</p> : null}
                 <TableContainer className="table table-hover">
@@ -276,7 +275,7 @@ const CartItemsContainer = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {cart?.products?.length &&
+                      {cart.products.length &&
                         cart.products.map((item) => (
                           <CartItem
                             key={item.productId}
@@ -451,7 +450,7 @@ const CartItemsContainer = () => {
           </div>
         )}
       </div>
-    </AppProvider>
+    </>
   );
 };
 

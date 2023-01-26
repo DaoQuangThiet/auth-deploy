@@ -89,7 +89,7 @@ const PRODUCT_QUERY = gql`
 const Home = (props) => {
   const { products, productseller } = props;
   return (
-    <AppProvider>
+    <>
       <Box>
         <SwipeableTextMobileStepper />
         <DealsOfDay />
@@ -127,7 +127,7 @@ const Home = (props) => {
         <Logo />
         <NameForm />
       </Box>
-    </AppProvider>
+    </>
   );
 };
 

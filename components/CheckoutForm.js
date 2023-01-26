@@ -291,6 +291,30 @@ const CheckoutForm = (props) => {
      */
     setOrderData(checkOutData);
   };
+  const handleShippingChange = async (target) => {
+    const newState = {
+      ...input,
+      shipping: { ...input?.shipping, [target.name]: target.value },
+    };
+    setInput(newState);
+    await setStatesForCountry(
+      target,
+      setTheShippingStates,
+      setIsFetchingShippingStates
+    );
+  };
+  const handleBillingChange = async (target) => {
+    const newState = {
+      ...input,
+      billing: { ...input?.billing, [target.name]: target.value },
+    };
+    setInput(newState);
+    await setStatesForCountry(
+      target,
+      setTheBillingStates,
+      setIsFetchingBillingStates
+    );
+  };
   const handleOnChange = async (
     event,
     isShipping = false,
@@ -314,31 +338,6 @@ const CheckoutForm = (props) => {
     }
   };
 
-  const handleShippingChange = async (target) => {
-    const newState = {
-      ...input,
-      shipping: { ...input?.shipping, [target.name]: target.value },
-    };
-    setInput(newState);
-    await setStatesForCountry(
-      target,
-      setTheShippingStates,
-      setIsFetchingShippingStates
-    );
-  };
-
-  const handleBillingChange = async (target) => {
-    const newState = {
-      ...input,
-      billing: { ...input?.billing, [target.name]: target.value },
-    };
-    setInput(newState);
-    await setStatesForCountry(
-      target,
-      setTheBillingStates,
-      setIsFetchingBillingStates
-    );
-  };
   useEffect(() => {
     async function FetchData() {
       if (null !== orderData) {
@@ -516,7 +515,7 @@ const CheckoutForm = (props) => {
                         {item.qty} x {item.name}
                       </Typography>
                     </ListItemText>
-                    <Typography variant="div">${item.totalPrice}</Typography>
+                    <Typography variant="div">{item.totalPrice}</Typography>
                   </MenuItem>
                 ))}
 
@@ -527,7 +526,7 @@ const CheckoutForm = (props) => {
                     <Typography variant="div">Sub Total</Typography>
                   </ListItemText>
                   <Typography variant="div">
-                    ${existingCart.totalProductsPrice}
+                    {existingCart.totalProductsPrice}
                   </Typography>
                 </MenuItem>
                 <MenuItem sx={{ marginBottom: "10px" }}>
@@ -562,7 +561,7 @@ const CheckoutForm = (props) => {
                     </Typography>
                   </ListItemText>
                   <Typography sx={{ fontWeight: "600" }}>
-                    ${existingCart.totalProductsPrice}
+                    {existingCart.totalProductsPrice}
                   </Typography>
                 </MenuItem>
                 <MenuItem sx={{ marginBottom: "10px" }}>

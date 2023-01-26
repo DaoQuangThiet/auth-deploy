@@ -7,7 +7,7 @@ import Banner from "../assets/img/banner_page.png";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Grid from "@mui/material/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { ApolloClient, ApolloProvider } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import client from "../libs/apollo/ApolloClient";
 
 const useStyles = makeStyles({
@@ -94,7 +94,6 @@ const Cart = (props) => {
         </Box>
         <Container>
           <CartItemsContainer />
-          {props.children}
         </Container>
       </ApolloProvider>
     </AppProvider>
