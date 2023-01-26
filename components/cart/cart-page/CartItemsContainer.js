@@ -104,7 +104,6 @@ const CartItemsContainer = () => {
 
       // Update cart data in React Context.
       setCart(updatedCart);
-      console.log(updatedCart);
     },
   });
 
@@ -162,7 +161,6 @@ const CartItemsContainer = () => {
       // By passing the newQty to 0 in updateCart Mutation, it will remove the item.
       const newQty = 0;
       const updatedItems = getUpdatedItems(products, newQty, cartKey);
-      console.log(updatedItems);
 
       updateCart({
         variables: {
