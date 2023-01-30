@@ -48,6 +48,7 @@ import {
 import CheckboxField from "./checkout/form-elements/CheckboxField";
 import validateAndSanitizeCheckoutForm from "./validator/checkout";
 import OrderSuccess from "./checkout/OrderSuccess";
+import PaymentModes from "./PaymentModes";
 
 const useStyles = makeStyles({
   page: {
@@ -171,7 +172,7 @@ const defaultCustomerInfo = {
   address1: "123 Abc farm",
   address2: "Hill Road",
   city: "Mumbai",
-  country: "IN",
+  country: "",
   state: "Maharastra",
   postcode: "221029",
   email: "codeytek.academy@gmail.com",
@@ -229,10 +230,10 @@ const CheckoutForm = (props) => {
     onCompleted: () => {
       // Update cart in the localStorage.
       const updatedCart = getFormattedCart(data);
-      console.log(updatedCart);
+      // console.log(updatedCart);
       // if (typeof window !== "undefined") {
-      //   localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
-      //   setCart(updatedCart);
+      localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
+      setCart(updatedCart);
       // }
 
       // Update cart data in React Context.
@@ -306,30 +307,7 @@ const CheckoutForm = (props) => {
      */
     setOrderData(checkOutData);
   };
-  const handleShippingChange = async (target) => {
-    const newState = {
-      ...input,
-      shipping: { ...input?.shipping, [target.name]: target.value },
-    };
-    setInput(newState);
-    await setStatesForCountry(
-      target,
-      setTheShippingStates,
-      setIsFetchingShippingStates
-    );
-  };
-  const handleBillingChange = async (target) => {
-    const newState = {
-      ...input,
-      billing: { ...input?.billing, [target.name]: target.value },
-    };
-    setInput(newState);
-    await setStatesForCountry(
-      target,
-      setTheBillingStates,
-      setIsFetchingBillingStates
-    );
-  };
+
   const handleOnChange = async (
     event,
     isShipping = false,
@@ -351,6 +329,31 @@ const CheckoutForm = (props) => {
       const newState = { ...input, [target.name]: target.value };
       setInput(newState);
     }
+  };
+  const handleShippingChange = async (target) => {
+    const newState = {
+      ...input,
+      shipping: { ...input?.shipping, [target.name]: target.value },
+    };
+    setInput(newState);
+    await setStatesForCountry(
+      target,
+      setTheShippingStates,
+      setIsFetchingShippingStates
+    );
+  };
+
+  const handleBillingChange = async (target) => {
+    const newState = {
+      ...input,
+      billing: { ...input?.billing, [target.name]: target.value },
+    };
+    setInput(newState);
+    await setStatesForCountry(
+      target,
+      setTheBillingStates,
+      setIsFetchingBillingStates
+    );
   };
 
   useEffect(() => {
@@ -538,14 +541,6 @@ const CheckoutForm = (props) => {
               <MenuList>
                 <MenuItem sx={{ marginBottom: "10px" }}>
                   <ListItemText>
-                    <Typography variant="div">Sub Total</Typography>
-                  </ListItemText>
-                  <Typography variant="div">
-                    {existingCart.totalProductsPrice}
-                  </Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
                     <Typography variant="div">Tax</Typography>
                   </ListItemText>
                   <Typography variant="div">$0.00</Typography>
@@ -555,13 +550,6 @@ const CheckoutForm = (props) => {
                     <Typography variant="div">Shipping</Typography>
                   </ListItemText>
                   <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography>
-                      <Link>Do you have Coupon?</Link>
-                    </Typography>
-                  </ListItemText>
                 </MenuItem>
               </MenuList>
 
@@ -579,98 +567,8 @@ const CheckoutForm = (props) => {
                     {existingCart.totalProductsPrice}
                   </Typography>
                 </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Wallet points</Typography>
-                  </ListItemText>
-                  <Typography variant="div">0</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Wallet currency</Typography>
-                  </ListItemText>
-                  <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography>
-                      <Checkbox color="default" />
-                      <Link>Do you have Coupon?</Link>
-                    </Typography>
-                  </ListItemText>
-                </MenuItem>
               </MenuList>
-              <Paper sx={{ marginTop: "15px" }}>
-                <Box
-                  sx={{
-                    width: "100%",
-                    textAlign: "center",
-                    marginBottom: "15px",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "600" }}>
-                    Choose Payment Method
-                  </Typography>
-                  <Box>
-                    <TabsUnstyled defaultValue={0}>
-                      <TabsListUnstyled className={classes.tabListPay}>
-                        <TabUnstyled className={classes.tabPay}>
-                          Stripe
-                        </TabUnstyled>
-                        <TabUnstyled className={classes.tabPay}>
-                          Cash On Delivery
-                        </TabUnstyled>
-                      </TabsListUnstyled>
-                      <TabPanelUnstyled
-                        className={classes.tabPanePay}
-                        value={0}
-                      >
-                        <FormControl variant="standard">
-                          <Input
-                            id="input-with-icon-adornment"
-                            startAdornment={
-                              <InputAdornment position="start">
-                                <PaymentIcon />
-                                số thẻ
-                              </InputAdornment>
-                            }
-                          />
-                        </FormControl>
-                      </TabPanelUnstyled>
-                      <TabPanelUnstyled
-                        className={classes.tabPanePay}
-                        value={1}
-                      >
-                        <FormControl variant="standard">
-                          <Input
-                            id="input-with-icon-adornment"
-                            startAdornment={
-                              <InputAdornment position="start">
-                                <PaymentIcon />
-                                số thẻ
-                              </InputAdornment>
-                            }
-                          />
-                        </FormControl>
-                      </TabPanelUnstyled>
-                    </TabsUnstyled>
-                    <Box
-                      sx={{
-                        textAlign: "center",
-                        paddingBottom: "15px",
-                        paddingTop: "10px",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{ backgroundColor: "#40c6ff" }}
-                      >
-                        Success
-                      </Button>
-                    </Box>
-                  </Box>
-                </Box>
-              </Paper>
+              <PaymentModes input={input} handleOnChange={handleOnChange} />
               <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
                 <Button
                   disabled={isOrderProcessing}
