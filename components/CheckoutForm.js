@@ -167,12 +167,12 @@ const useStyles = makeStyles({
 });
 
 const defaultCustomerInfo = {
-  firstName: "Imran",
-  lastName: "Sayed",
+  firstName: "DAO",
+  lastName: "QuangThiet",
   address1: "123 Abc farm",
   address2: "Hill Road",
   city: "Mumbai",
-  country: "",
+  country: "IN",
   state: "Maharastra",
   postcode: "221029",
   email: "codeytek.academy@gmail.com",
@@ -283,7 +283,6 @@ const CheckoutForm = (props) => {
           errors: shippingValidationResult.errors,
         },
       });
-    } else {
       return;
     }
 
