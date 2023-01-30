@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 /**
  * Extracts and returns float value from a string.
  *
