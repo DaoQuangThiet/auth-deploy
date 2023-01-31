@@ -49,6 +49,7 @@ import CheckboxField from "./checkout/form-elements/CheckboxField";
 import validateAndSanitizeCheckoutForm from "./validator/checkout";
 import OrderSuccess from "./checkout/OrderSuccess";
 import PaymentModes from "./PaymentModes";
+import getCountry from "./GetCountry";
 
 const useStyles = makeStyles({
   page: {
@@ -166,38 +167,37 @@ const useStyles = makeStyles({
   },
 });
 
-const defaultCustomerInfo = {
-  firstName: "DAO",
-  lastName: "QuangThiet",
-  address1: "123 Abc farm",
-  address2: "Hill Road",
-  city: "Mumbai",
-  country: "IN",
-  state: "Maharastra",
-  postcode: "221029",
-  email: "codeytek.academy@gmail.com",
-  phone: "9883778278",
-  company: "The Company",
-  errors: null,
-};
 // const defaultCustomerInfo = {
-//   firstName: "",
-//   lastName: "",
-//   address1: "",
-//   address2: "",
-//   city: "",
-//   country: "",
-//   state: "",
-//   postcode: "",
-//   email: "",
-//   phone: "",
-//   company: "",
+//   firstName: "DAO",
+//   lastName: "QuangThiet",
+//   address1: "123 Abc farm",
+//   address2: "Hill Road",
+//   city: "Mumbai",
+//   country: "IN",
+//   state: "Maharastra",
+//   postcode: "221029",
+//   email: "codeytek.academy@gmail.com",
+//   phone: "9883778278",
+//   company: "The Company",
 //   errors: null,
 // };
+const defaultCustomerInfo = {
+  firstName: "",
+  lastName: "",
+  address1: "",
+  address2: "",
+  city: "",
+  country: "",
+  state: "",
+  postcode: "",
+  email: "",
+  phone: "",
+  company: "",
+  errors: null,
+};
 
 const CheckoutForm = (props) => {
-  const { existingCart, countriesData } = props;
-  const { billingCountries, shippingCountries } = countriesData || [];
+  const { existingCart } = props;
   const classes = useStyles();
   const initialState = {
     billing: {
@@ -376,7 +376,7 @@ const CheckoutForm = (props) => {
               <Typography variant="h4">Shipping Details</Typography>
               <Address
                 states={theShippingStates}
-                countries={shippingCountries}
+                countries={getCountry}
                 input={input?.shipping}
                 handleOnChange={(event) => handleOnChange(event, true, true)}
                 isFetchingStates={isFetchingShippingStates}
@@ -399,7 +399,7 @@ const CheckoutForm = (props) => {
                 <Typography variant="h4">Billing Details</Typography>
                 <Address
                   states={theBillingStates}
-                  countries={billingCountries}
+                  countries={getCountry}
                   input={input?.billing}
                   handleOnChange={(event) => handleOnChange(event, false, true)}
                   isFetchingStates={isFetchingBillingStates}

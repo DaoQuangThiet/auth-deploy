@@ -28,11 +28,11 @@ const CountrySelection = ({ input, handleOnChange, countries, isShipping }) => {
           {!isEmpty(countries) &&
             map(countries, (country) => (
               <option
-                key={country?.countryCode}
-                data-countrycode={country?.countryCode}
-                value={country?.countryCode}
+                key={country?.code}
+                data-countrycode={country?.code}
+                value={country?.code}
               >
-                {country?.countryName}
+                {country?.name}
               </option>
             ))}
         </select>
