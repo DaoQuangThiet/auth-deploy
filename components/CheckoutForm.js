@@ -18,7 +18,6 @@ import {
   setStatesForCountry,
 } from "../utils/checkout";
 import Address from "./checkout/Address";
-import CheckboxField from "./checkout/form-elements/CheckboxField";
 import OrderSuccess from "./checkout/OrderSuccess";
 import getCountry from "./GetCountry";
 import PaymentModes from "./PaymentModes";
@@ -350,79 +349,83 @@ const CheckoutForm = (props) => {
     <>
       {cart ? (
         <form onSubmit={handleFormSubmit} className={classes.checkoutForm}>
-          <Grid iteam sx={{ width: "60%" }}>
-            <Typography variant="h5">Shipping Details</Typography>
-            <Address
-              states={theShippingStates}
-              countries={getCountry}
-              input={input?.shipping}
-              handleOnChange={(event) => handleOnChange(event, true, true)}
-              isFetchingStates={isFetchingShippingStates}
-              isShipping
-              isBillingOrShipping
-            />
-          </Grid>
-          <Grid iteam sx={{ width: "40%" }}>
-            <Box className={classes.payment}>
-              <Typography variant="h5">Your Order</Typography>
-              {existingCart?.products?.length &&
-                existingCart.products.map((item) => (
-                  <MenuItem sx={{ marginBottom: "10px" }} key={item}>
+          <Grid container spacing={1}>
+            <Grid item lg={8} md={8} xs={12}>
+              <Typography variant="h5">Shipping Details</Typography>
+              <Address
+                states={theShippingStates}
+                countries={getCountry}
+                input={input?.shipping}
+                handleOnChange={(event) => handleOnChange(event, true, true)}
+                isFetchingStates={isFetchingShippingStates}
+                isShipping
+                isBillingOrShipping
+              />
+            </Grid>
+            <Grid item lg={4} md={4} xs={12}>
+              <Box className={classes.payment}>
+                <Typography variant="h5">Your Order</Typography>
+                {existingCart?.products?.length &&
+                  existingCart.products.map((item) => (
+                    <MenuItem sx={{ marginBottom: "10px" }} key={item}>
+                      <ListItemText>
+                        <Typography variant="div">
+                          {item.qty} x {item.name}
+                        </Typography>
+                      </ListItemText>
+                      <Typography variant="div">{item.totalPrice}</Typography>
+                    </MenuItem>
+                  ))}
+
+                <Divider />
+                <MenuList>
+                  <MenuItem sx={{ marginBottom: "10px" }}>
                     <ListItemText>
-                      <Typography variant="div">
-                        {item.qty} x {item.name}
+                      <Typography variant="div">Tax</Typography>
+                    </ListItemText>
+                    <Typography variant="div">$0.00</Typography>
+                  </MenuItem>
+                  <MenuItem sx={{ marginBottom: "10px" }}>
+                    <ListItemText>
+                      <Typography variant="div">Shipping</Typography>
+                    </ListItemText>
+                    <Typography variant="div">$0.00</Typography>
+                  </MenuItem>
+                </MenuList>
+
+                <Divider />
+                <Divider />
+
+                <MenuList>
+                  <MenuItem sx={{ marginBottom: "10px" }}>
+                    <ListItemText>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Sub Total
                       </Typography>
                     </ListItemText>
-                    <Typography variant="div">{item.totalPrice}</Typography>
-                  </MenuItem>
-                ))}
-
-              <Divider />
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Tax</Typography>
-                  </ListItemText>
-                  <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Shipping</Typography>
-                  </ListItemText>
-                  <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-              </MenuList>
-
-              <Divider />
-              <Divider />
-
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
                     <Typography sx={{ fontWeight: "600" }}>
-                      Sub Total
+                      {existingCart.totalProductsPrice}
                     </Typography>
-                  </ListItemText>
-                  <Typography sx={{ fontWeight: "600" }}>
-                    {existingCart.totalProductsPrice}
-                  </Typography>
-                </MenuItem>
-              </MenuList>
-              <PaymentModes input={input} handleOnChange={handleOnChange} />
-              <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
-                <Button
-                  disabled={isOrderProcessing}
-                  type="submit"
-                  // onClick={handleSubmit}
-                  sx={{ width: "100%", backgroundColor: "#40c6ff" }}
-                  variant="contained"
-                >
-                  Place Order
-                </Button>
-              </Stack>
-              {isOrderProcessing && <p>Processing Order...</p>}
-              {requestError && <p>Error : {requestError} : Please try again</p>}
-            </Box>
+                  </MenuItem>
+                </MenuList>
+                <PaymentModes input={input} handleOnChange={handleOnChange} />
+                <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
+                  <Button
+                    disabled={isOrderProcessing}
+                    type="submit"
+                    // onClick={handleSubmit}
+                    sx={{ width: "100%", backgroundColor: "#40c6ff" }}
+                    variant="contained"
+                  >
+                    Place Order
+                  </Button>
+                </Stack>
+                {isOrderProcessing && <p>Processing Order...</p>}
+                {requestError && (
+                  <p>Error : {requestError} : Please try again</p>
+                )}
+              </Box>
+            </Grid>
           </Grid>
         </form>
       ) : null}

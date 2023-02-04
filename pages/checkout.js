@@ -62,7 +62,7 @@ const useStyles = makeStyles({
   mainCheckout: {
     marginTop: "30px",
     display: "flex",
-    "@media (max-width: 768px)": {
+    "@media (max-width: 600px)": {
       display: "block",
     },
   },
@@ -172,42 +172,49 @@ const Checkout = (props) => {
         <Box className={classes.page}>
           <Container>
             <Box className={classes.titlePage}>
-              <Grid item lg={6}>
-                <Box>
-                  <Typography
-                    className={classes.textTile}
-                    component="h3"
-                    variant="h3"
-                  >
-                    Checkout
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item lg={6}>
-                <Box className={classes.rightTextPage}>
-                  <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
+              <Grid container spacing={1}>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box>
                     <Typography
-                      className={classes.titleText}
-                      component="h6"
-                      variant="h6"
-                    >
-                      Home
-                    </Typography>
-                    <Typography
-                      className={classes.titleText}
-                      component="h6"
-                      variant="h6"
+                      className={classes.textTile}
+                      component="h3"
+                      variant="h3"
                     >
                       Checkout
                     </Typography>
-                  </Breadcrumbs>
-                </Box>
+                  </Box>
+                </Grid>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box className={classes.rightTextPage}>
+                    <Breadcrumbs
+                      sx={{ color: "white" }}
+                      aria-label="breadcrumb"
+                    >
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Home
+                      </Typography>
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Checkout
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                </Grid>
               </Grid>
             </Box>
           </Container>
         </Box>
         <Container>
-          <CheckoutForm existingCart={existingCart} />
+          <Box className={classes.mainCheckout}>
+            <CheckoutForm existingCart={existingCart} />
+          </Box>
         </Container>
       </AppProvider>
     </ApolloProvider>

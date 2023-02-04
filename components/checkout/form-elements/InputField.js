@@ -49,10 +49,7 @@ const InputField = ({
   const classes = useStyles();
 
   return (
-    <Box
-      sx={{ display: "block", padding: "15px" }}
-      className={classes.containerClassNames}
-    >
+    <Box sx={{ padding: "15px" }} className={classes.containerClassNames}>
       <TextField
         fullWidth
         required={required}
