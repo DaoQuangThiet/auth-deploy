@@ -114,6 +114,11 @@ const useStyles = makeStyles({
       },
     },
   },
+  descPro: {
+    color: "#666",
+    margin: "18px 8px 27px 0px",
+    textDecoration: "none",
+  },
 });
 export default function DealsOfDay() {
   const classes = useStyles();
@@ -243,9 +248,7 @@ export default function DealsOfDay() {
                   $190.00
                 </Typography>
               </Typography>
-              <Typography
-                style={{ color: "#666", margin: "18px 8px 27px 0px" }}
-              >
+              <Typography className={classes.descPro}>
                 Caramel Ice Cream with a Swirl of Caramel & Fudge Covered
                 Caramel Chunks. Caramel lovers wont want to...
               </Typography>
