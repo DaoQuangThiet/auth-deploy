@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Abbr from "./Abbr";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, MenuList, Typography } from "@mui/material";
+import { Box, MenuList, TextField, Typography } from "@mui/material";
 
 const defaultCustomerInfo = {
   firstName: "",
@@ -51,24 +51,28 @@ const InputField = ({
   return (
     <Box
       sx={{ display: "block", padding: "15px" }}
-      className={containerClassNames}
+      className={classes.containerClassNames}
     >
-      <Typography className="leading-7 text-sm text-gray-700" htmlFor={inputId}>
-        {label || ""}
-        <Abbr required={required} />
-      </Typography>
-      <Box className={classes.boxinput}>
-        <input
-          onChange={handleOnChange}
-          value={inputValue}
-          placeholder={placeholder}
-          type={type}
-          name={name}
-          className={classes.formInput}
-          id={inputId}
-        />
-        <Error errors={errors} fieldName={name} />
-      </Box>
+      <TextField
+        fullWidth
+        required={required}
+        id={inputId}
+        label={label}
+        onChange={handleOnChange}
+        value={inputValue}
+        type="type"
+        name={name}
+      />
+      <Error errors={errors} fieldName={name} />
+      {/* <input
+            onChange={handleOnChange}
+            value={inputValue}
+            placeholder={placeholder}
+            type={type}
+            name={name}
+            className={classes.formInput}
+            id={inputId}
+          /> */}
     </Box>
   );
 };

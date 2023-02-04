@@ -1,57 +1,37 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  Grid,
-  InputAdornment,
-  Link,
-  MenuList,
-  Stack,
-  Typography,
-} from "@mui/material";
-import Paper from "@mui/material/Paper";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import AddIcon from "@mui/icons-material/Add";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import React, { useContext, useEffect, useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import { makeStyles } from "@material-ui/core/styles";
-import Banner from "../assets/img/banner_page.png";
-import { AppContext } from "../libs/context/AppContext";
 import { useMutation, useQuery } from "@apollo/client";
-import gql from "graphql-tag";
-import client from "../libs/apollo/ApolloClient";
-import { reach } from "yup";
+import { makeStyles } from "@material-ui/core/styles";
+import { Box, Button, Grid, MenuList, Stack, Typography } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import React, { useContext, useEffect, useState } from "react";
+import Banner from "../assets/img/banner_page.png";
 import { createCheckoutData, getFormattedCart } from "../function";
-import GET_CART from "../libs/queries/get-cart";
+import { AppContext } from "../libs/context/AppContext";
 import CHECKOUT_MUTATION from "../libs/mutations/checkout";
 import CLEAR_CART_MUTATION from "../libs/mutations/clear-cart";
-import Address from "./checkout/Address";
-import Divider from "@mui/material/Divider";
-import {
-  TabPanelUnstyled,
-  TabsListUnstyled,
-  TabsUnstyled,
-  TabUnstyled,
-} from "@mui/base";
-import { Input } from "@material-ui/core";
-import PaymentIcon from "@mui/icons-material/Payment";
+import GET_CART from "../libs/queries/get-cart";
 import {
   handleBillingDifferentThanShipping,
   handleCreateAccount,
   handleStripeCheckout,
   setStatesForCountry,
 } from "../utils/checkout";
+import Address from "./checkout/Address";
 import CheckboxField from "./checkout/form-elements/CheckboxField";
-import validateAndSanitizeCheckoutForm from "./validator/checkout";
 import OrderSuccess from "./checkout/OrderSuccess";
-import PaymentModes from "./PaymentModes";
 import getCountry from "./GetCountry";
+import PaymentModes from "./PaymentModes";
+import validateAndSanitizeCheckoutForm from "./validator/checkout";
 
 const useStyles = makeStyles({
+  checkoutForm: {
+    marginTop: "30px",
+    display: "flex",
+    "@media (max-width: 768px)": {
+      display: "block",
+    },
+  },
   page: {
     marginBottom: "60px",
     minHeight: "200px",
@@ -335,11 +315,11 @@ const CheckoutForm = (props) => {
       shipping: { ...input?.shipping, [target.name]: target.value },
     };
     setInput(newState);
-    await setStatesForCountry(
-      target,
-      setTheShippingStates,
-      setIsFetchingShippingStates
-    );
+    // await setStatesForCountry(
+    //   target,
+    //   setTheShippingStates,
+    //   setIsFetchingShippingStates
+    // );
   };
 
   const handleBillingChange = async (target) => {
@@ -370,160 +350,21 @@ const CheckoutForm = (props) => {
     <>
       {cart ? (
         <form onSubmit={handleFormSubmit} className={classes.checkoutForm}>
-          <Grid iteam lg={8}>
-            <Typography variant="h3">Checkout Page</Typography>
-            <Box className="billing-details-container">
-              <Typography variant="h4">Shipping Details</Typography>
-              <Address
-                states={theShippingStates}
-                countries={getCountry}
-                input={input?.shipping}
-                handleOnChange={(event) => handleOnChange(event, true, true)}
-                isFetchingStates={isFetchingShippingStates}
-                isShipping
-                isBillingOrShipping
-              />
-            </Box>
-            <Box>
-              <CheckboxField
-                name="billingDifferentThanShipping"
-                type="checkbox"
-                checked={input?.billingDifferentThanShipping}
-                handleOnChange={handleOnChange}
-                label="Billing different than shipping"
-                containerClassNames="mb-4 pt-4"
-              />
-            </Box>
-            {input?.billingDifferentThanShipping ? (
-              <Box className="billing-details-container">
-                <Typography variant="h4">Billing Details</Typography>
-                <Address
-                  states={theBillingStates}
-                  countries={getCountry}
-                  input={input?.billing}
-                  handleOnChange={(event) => handleOnChange(event, false, true)}
-                  isFetchingStates={isFetchingBillingStates}
-                  isShipping={false}
-                  isBillingOrShipping
-                />
-              </Box>
-            ) : null}
-
-            {/* <Paper className={classes.contactNumber}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      1
-                    </Typography>
-                    Contact Number
-                  </ListItemText>
-                  <ListItemIcon sx={{ color: "#40c6ff" }}>
-                    <AddIcon label="add" fontSize="small" />
-                    Update
-                  </ListItemIcon>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper> */}
-            {/* <Paper className={classes.billingAddress}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      2
-                    </Typography>
-                    Billing Address
-                  </ListItemText>
-                  <ListItemIcon sx={{ color: "#40c6ff" }}>
-                    <AddIcon label="add" fontSize="small" />
-                    Update
-                  </ListItemIcon>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper> */}
-            {/* <Paper className={classes.shippingAddress}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      3
-                    </Typography>
-                    Shipping Address
-                  </ListItemText>
-                  <ListItemIcon sx={{ color: "#40c6ff" }}>
-                    <AddIcon label="add" fontSize="small" />
-                    Update
-                  </ListItemIcon>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper> */}
-            {/* <Paper className={classes.deliverySchedule}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      4
-                    </Typography>
-                    Delivery Schedule
-                  </ListItemText>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper> */}
+          <Grid iteam sx={{ width: "60%" }}>
+            <Typography variant="h5">Shipping Details</Typography>
+            <Address
+              states={theShippingStates}
+              countries={getCountry}
+              input={input?.shipping}
+              handleOnChange={(event) => handleOnChange(event, true, true)}
+              isFetchingStates={isFetchingShippingStates}
+              isShipping
+              isBillingOrShipping
+            />
           </Grid>
-          <Grid iteam lg={4}>
+          <Grid iteam sx={{ width: "40%" }}>
             <Box className={classes.payment}>
-              <Typography variant="h4">Your Order</Typography>
+              <Typography variant="h5">Your Order</Typography>
               {existingCart?.products?.length &&
                 existingCart.products.map((item) => (
                   <MenuItem sx={{ marginBottom: "10px" }} key={item}>

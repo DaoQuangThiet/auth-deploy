@@ -57,11 +57,8 @@ const StateSelection = ({
         >
           <option value="">Select a state...</option>
           {states.map((state, index) => (
-            <option
-              key={state?.stateCode ?? index}
-              value={state?.stateName ?? ""}
-            >
-              {state?.stateName}
+            <option key={state?.code ?? index} value={state?.stateName ?? ""}>
+              {state?.states}
             </option>
           ))}
         </select>

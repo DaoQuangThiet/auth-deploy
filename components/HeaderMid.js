@@ -214,7 +214,7 @@ const HeaderMid = (props) => {
   );
 };
 
-HeaderMid.PropTypes = {
+HeaderMid.propTypes = {
   searchQuery: PropTypes.string,
   setSearchQuery: PropTypes.func,
   handleSearchForm: PropTypes.func,

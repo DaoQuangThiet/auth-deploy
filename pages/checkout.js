@@ -207,9 +207,7 @@ const Checkout = (props) => {
           </Container>
         </Box>
         <Container>
-          <Box className={classes.mainCheckout}>
-            <CheckoutForm existingCart={existingCart} />
-          </Box>
+          <CheckoutForm existingCart={existingCart} />
         </Container>
       </AppProvider>
     </ApolloProvider>

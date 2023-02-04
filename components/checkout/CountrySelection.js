@@ -3,46 +3,41 @@ import { isEmpty, map } from "lodash";
 import Abbr from "./form-elements/Abbr";
 import SvgArrowDown from "../icons/ArrowDown";
 import Error from "./Error";
-import { Box, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 
+const useStyles = makeStyles({});
 const CountrySelection = ({ input, handleOnChange, countries, isShipping }) => {
   const { country, errors } = input || {};
-
+  const classes = useStyles();
   const inputId = `country-${isShipping ? "shipping" : "billing"}`;
 
   return (
-    <Box sx={{ display: "block", padding: "15px" }} className="mb-3">
-      <Typography className="leading-7 text-sm text-gray-700" htmlFor={inputId}>
-        Country
-        <Abbr required />
-      </Typography>
-      <div className="relative w-full border-none">
-        <select
-          onChange={handleOnChange}
-          value={country}
-          name="country"
-          className="bg-gray-100 bg-opacity-50 border border-gray-500 text-gray-500 appearance-none inline-block py-3 pl-3 pr-8 rounded leading-tight w-full"
-          id={inputId}
-        >
-          <option value="">Select a country...</option>
-          {!isEmpty(countries) &&
-            map(countries, (country) => (
-              <option
-                key={country?.code}
-                data-countrycode={country?.code}
-                value={country?.code}
-              >
-                {country?.name}
-              </option>
-            ))}
-        </select>
-        <span
-          className="absolute right-0 mr-1 text-gray-500"
-          style={{ top: "25%" }}
-        >
-          <SvgArrowDown width={24} height={24} className="fill-current" />
-        </span>
-      </div>
+    <Box sx={{ padding: "15px" }}>
+      <TextField
+        fullWidth
+        required
+        id={inputId}
+        select
+        name="country"
+        value={country}
+        label="Country"
+        onChange={handleOnChange}
+      >
+        {!isEmpty(countries) &&
+          map(countries, (country) => (
+            <MenuItem
+              key={country?.code}
+              data-countrycode={country?.code}
+              value={country?.code}
+            >
+              {country?.name}
+            </MenuItem>
+          ))}
+        {/* </Select> */}
+      </TextField>
+      {/* </FormControl> */}
       <Error errors={errors} fieldName={"country"} />
     </Box>
   );
