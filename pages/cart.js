@@ -57,37 +57,42 @@ const Cart = (props) => {
         <Box className={classes.page}>
           <Container>
             <Box className={classes.titlePage}>
-              <Grid item lg={6}>
-                <Box>
-                  <Typography
-                    className={classes.textTile}
-                    component="h3"
-                    variant="h3"
-                  >
-                    Cart
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item lg={6}>
-                <Box className={classes.rightTextPage}>
-                  <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
+              <Grid container spacing={1}>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box>
                     <Typography
-                      className={classes.titleText}
-                      component="h6"
-                      variant="h6"
-                    >
-                      Home
-                    </Typography>
-
-                    <Typography
-                      className={classes.titleText}
-                      component="h6"
-                      variant="h6"
+                      className={classes.textTile}
+                      component="h3"
+                      variant="h3"
                     >
                       Cart
                     </Typography>
-                  </Breadcrumbs>
-                </Box>
+                  </Box>
+                </Grid>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box className={classes.rightTextPage}>
+                    <Breadcrumbs
+                      sx={{ color: "white" }}
+                      aria-label="breadcrumb"
+                    >
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Home
+                      </Typography>
+
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Cart
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                </Grid>
               </Grid>
             </Box>
           </Container>

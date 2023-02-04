@@ -1,28 +1,24 @@
-import Link from "next/link";
+import { ApolloProvider } from "@apollo/client";
+import { makeStyles } from "@material-ui/core/styles";
+import { Grid } from "@mui/material";
+import Box from "@mui/material/Box";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Container from "@mui/material/Container";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import { isEmpty } from "lodash";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import client from "../../libs/apollo/ApolloClient";
+import Banner from "../../assets/img/banner_page.png";
 import AddToCartButton from "../../components/cart/AddToCartButton";
+import CategoriesCarousel from "../../components/single-product/categories-carousel";
+import GalleryCarousel from "../../components/single-product/gallery-carousel";
+import Price from "../../components/single-product/price";
+import client from "../../libs/apollo/ApolloClient";
 import {
   PRODUCT_BY_SLUG_QUERY,
   PRODUCT_SLUGS,
 } from "../../libs/queries/product-by-slug";
-import { isEmpty } from "lodash";
-import GalleryCarousel from "../../components/single-product/gallery-carousel";
-import CategoriesCarousel from "../../components/single-product/categories-carousel";
-import RelatedProduct from "../../components/single-product/related-product";
-import Price from "../../components/single-product/price";
-import { ImageList } from "@mui/material";
-import { ImageListItem } from "@mui/material";
-import { Grid } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
-import Rating from "@mui/material/Rating";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Banner from "../../assets/img/banner_page.png";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { AppProvider } from "../../libs/context/AppContext";
-import { ApolloProvider } from "@apollo/client";
 
 const colorHeading = "#323232";
 const colorHover = "#40c6ff";
@@ -211,37 +207,42 @@ export default function Product(props) {
         <Box className={classes.page}>
           <Container>
             <Box className={classes.titlePage}>
-              <Grid item lg={6}>
-                <Box>
-                  <Typography
-                    className={classes.textTile}
-                    component="h3"
-                    variant="h3"
-                  >
-                    Product Detail
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item lg={6}>
-                <Box className={classes.rightTextPage}>
-                  <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
+              <Grid container spacing={1}>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box>
                     <Typography
-                      className={classes.titleText}
-                      component="h6"
-                      variant="h6"
-                    >
-                      Home
-                    </Typography>
-
-                    <Typography
-                      className={classes.titleText}
-                      component="h6"
-                      variant="h6"
+                      className={classes.textTile}
+                      component="h3"
+                      variant="h3"
                     >
                       Product Detail
                     </Typography>
-                  </Breadcrumbs>
-                </Box>
+                  </Box>
+                </Grid>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box className={classes.rightTextPage}>
+                    <Breadcrumbs
+                      sx={{ color: "white" }}
+                      aria-label="breadcrumb"
+                    >
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Home
+                      </Typography>
+
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Product Detail
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                </Grid>
               </Grid>
             </Box>
           </Container>
