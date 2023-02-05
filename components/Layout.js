@@ -1,30 +1,33 @@
 import React from "react";
 
-// import header footer all pages 
+// import header footer all pages
 import AddHead from "./AddHead";
 import SideBarTop from "./sidebar";
 import HeaderMid from "./HeaderMid";
 import HeaderCenter from "./HeaderCenter";
 import Footer from "./Footer";
 import Copyright from "./Copyright";
-//import { AppProvider } from "./context/Appcontext";
+import { AppProvider } from "../libs/context/AppContext";
+import { ApolloProvider } from "@apollo/client";
+import client from "../libs/apollo/ApolloClient";
 
-const layout = ({ children }) => {
-    return (
-        // <AppProvider>
-        <div>
-            <AddHead />
-            <SideBarTop />
-            <HeaderMid />
-            <HeaderCenter />
+const Layout = ({ children }) => {
+  return (
+    // <AppProvider>
+    //   <ApolloProvider client={client}>
+    <div>
+      <AddHead />
+      <SideBarTop />
+      <HeaderMid />
+      <HeaderCenter />
 
-            {children}
+      {children}
 
-            <Footer />
-            <Copyright />
-
-        </div>
-        // </AppProvider>
-    )
-}
-export default layout;
+      <Footer />
+      <Copyright />
+    </div>
+    //   </ApolloProvider>
+    // </AppProvider>
+  );
+};
+export default Layout;

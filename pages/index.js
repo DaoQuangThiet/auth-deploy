@@ -1,5 +1,5 @@
-import React from "react";
 import { Box, Container, Grid } from "@mui/material";
+import React from "react";
 // slider
 import SwipeableTextMobileStepper from "../components/slider";
 // end slider
@@ -21,14 +21,12 @@ import NameForm from "../components/formEmail";
 // end  form Email
 
 //import request data
-import client from "../libs/apollo/ApolloClient";
 import gql from "graphql-tag";
-import { AppContext } from "../libs/context/AppContext";
-import { AppProvider } from "../libs/context/AppContext";
 import DealsOfDay from "../components/DealsOfDay";
 import Tab from "../components/tab";
 import TabSeller from "../components/tabSeller";
 import Logo from "../components/tabsLogo";
+import client from "../libs/apollo/ApolloClient";
 
 const PRODUCT_QUERY = gql`
   query Product($cat: String!, $cat1: String!) {
@@ -85,62 +83,77 @@ const PRODUCT_QUERY = gql`
     }
   }
 `;
+const PRO_DEALS_QUERY = gql`
+  query fetchAuthor {
+    products(where: { onSale: true, category: "Jewelry" }, first: 2) {
+      nodes {
+        id
+        name
+        description
+        slug
+        image {
+          uri
+          srcSet
+          sourceUrl
+        }
+        onSale
+        ... on SimpleProduct {
+          id
+          name
+          price
+          regularPrice
+        }
+      }
+    }
+  }
+`;
 
 const Home = (props) => {
-  const { products, productseller } = props;
+  const { products, productseller, productDeal } = props;
   return (
-    <Box>
-      <SwipeableTextMobileStepper />
-      <DealsOfDay />
-      <Container>
-        <Tab />
-        <Grid
-          container
-          spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
-          columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
-        >
-          {products.length
-            ? products.map((product) => (
-                <Product key={product.id} product={product} />
-              ))
-            : ""}
-        </Grid>
-      </Container>
+    <>
+      <Box>
+        <SwipeableTextMobileStepper />
+        <DealsOfDay productDeal={productDeal} />
+        <Container>
+          <Tab />
+          <Grid
+            container
+            spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
+            columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
+          >
+            {products.length
+              ? products.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))
+              : ""}
+          </Grid>
+        </Container>
 
-      <NewImageList />
-      <Container>
-        <TabSeller />
-        <Grid
-          container
-          spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
-          columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
-        >
-          {productseller.length
-            ? productseller.map((product) => (
-                <Product key={product.id} product={product} />
-              ))
-            : ""}
-        </Grid>
-      </Container>
-      <SellerImageList />
-      <Logo />
-      <NameForm />
-    </Box>
+        <NewImageList />
+        <Container>
+          <TabSeller />
+          <Grid
+            container
+            spacing={{ sm: 2, md: 2, xs: 4, lg: 3 }}
+            columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
+          >
+            {productseller.length
+              ? productseller.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))
+              : ""}
+          </Grid>
+        </Container>
+        <SellerImageList />
+        <Logo />
+        <NameForm />
+      </Box>
+    </>
   );
 };
 
 export default Home;
-// Home.getServerSideProps = async (context) => {
-//   console.log(context);
-//   const result = await client.query({
-//     query: PRODUCT_QUERY
-//   });
-
-//   return {
-//     products: result.data.first.nodes,
-//     productseller: result.data.second.nodes,
-//   }
-// }
 export async function getServerSideProps({ query }) {
   const cat = query.cat ? query.cat : "";
   const cat1 = query.cat1 ? query.cat1 : "";
@@ -151,10 +164,14 @@ export async function getServerSideProps({ query }) {
       cat1,
     },
   });
+  const proDeal = await client.query({
+    query: PRO_DEALS_QUERY,
+  });
   return {
     props: {
       products: result.data.first.nodes,
       productseller: result.data.second.nodes,
+      productDeal: proDeal.data.products.nodes,
     },
   };
 }

@@ -6,10 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import AddIcon from "@mui/icons-material/Add";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
+
 import Divider from "@mui/material/Divider";
 // import Link from 'next/link';
 import { Link } from "@mui/material";
@@ -29,6 +26,13 @@ import Modal from "@mui/material/Modal";
 import Banner from "../assets/img/banner_page.png";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useRouter } from "next/router";
+import CheckoutForm from "../components/CheckoutForm";
+import { AppProvider } from "../libs/context/AppContext";
+import gql from "graphql-tag";
+import client from "../libs/apollo/ApolloClient";
+import { ApolloProvider } from "@apollo/client";
+import GET_CART from "../libs/queries/get-cart";
+import GET_COUNTRIES from "../libs/queries/get-countries";
 
 const useStyles = makeStyles({
   page: {
@@ -58,7 +62,7 @@ const useStyles = makeStyles({
   mainCheckout: {
     marginTop: "30px",
     display: "flex",
-    "@media (max-width: 768px)": {
+    "@media (max-width: 600px)": {
       display: "block",
     },
   },
@@ -147,7 +151,7 @@ const useStyles = makeStyles({
 });
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
-const Checkout = () => {
+const Checkout = (props) => {
   const router = useRouter();
   const classes = useStyles();
   let existingCart = "";
@@ -155,333 +159,65 @@ const Checkout = () => {
     existingCart = localStorage.getItem("woo-next-cart");
     existingCart = JSON.parse(existingCart);
   }
-  const handleSubmit = (value) => {
-    router.push(`/thankiu`);
-    localStorage.removeItem("woo-next-cart");
-  };
+  // const handleSubmit = (value) => {
+  //   router.push(`/thankiu`);
+  //   localStorage.removeItem("woo-next-cart");
+  // };
   // let existingCart = localStorage ? localStorage.getItem('woo-next-cart'): '';
   // existingCart = JSON.parse(existingCart);
   // console.warn(existingCart);
   return (
-    <>
-      <Box className={classes.page}>
+    <ApolloProvider client={client}>
+      <AppProvider>
+        <Box className={classes.page}>
+          <Container>
+            <Box className={classes.titlePage}>
+              <Grid container spacing={1}>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box>
+                    <Typography
+                      className={classes.textTile}
+                      component="h3"
+                      variant="h3"
+                    >
+                      Checkout
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item lg={6} md={6} xs={12}>
+                  <Box className={classes.rightTextPage}>
+                    <Breadcrumbs
+                      sx={{ color: "white" }}
+                      aria-label="breadcrumb"
+                    >
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Home
+                      </Typography>
+                      <Typography
+                        className={classes.titleText}
+                        component="h6"
+                        variant="h6"
+                      >
+                        Checkout
+                      </Typography>
+                    </Breadcrumbs>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </Container>
+        </Box>
         <Container>
-          <Box className={classes.titlePage}>
-            <Grid item lg={6}>
-              <Box>
-                <Typography
-                  className={classes.textTile}
-                  component="h3"
-                  variant="h3"
-                >
-                  Checkout
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item lg={6}>
-              <Box className={classes.rightTextPage}>
-                <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
-                  <Typography
-                    className={classes.titleText}
-                    component="h6"
-                    variant="h6"
-                  >
-                    Home
-                  </Typography>
-                  <Typography
-                    className={classes.titleText}
-                    component="h6"
-                    variant="h6"
-                  >
-                    Checkout
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
-            </Grid>
+          <Box className={classes.mainCheckout}>
+            <CheckoutForm existingCart={existingCart} />
           </Box>
         </Container>
-      </Box>
-      <Container>
-        <Box className={classes.mainCheckout}>
-          <Grid iteam lg={8}>
-            <Paper className={classes.contactNumber}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      1
-                    </Typography>
-                    Contact Number
-                  </ListItemText>
-                  <ListItemIcon sx={{ color: "#40c6ff" }}>
-                    <AddIcon label="add" fontSize="small" />
-                    Update
-                  </ListItemIcon>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper>
-            <Paper className={classes.billingAddress}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      2
-                    </Typography>
-                    Billing Address
-                  </ListItemText>
-                  <ListItemIcon sx={{ color: "#40c6ff" }}>
-                    <AddIcon label="add" fontSize="small" />
-                    Update
-                  </ListItemIcon>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper>
-            <Paper className={classes.shippingAddress}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      3
-                    </Typography>
-                    Shipping Address
-                  </ListItemText>
-                  <ListItemIcon sx={{ color: "#40c6ff" }}>
-                    <AddIcon label="add" fontSize="small" />
-                    Update
-                  </ListItemIcon>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper>
-            <Paper className={classes.deliverySchedule}>
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography
-                      variant="div"
-                      color="#fff"
-                      className={classes.number}
-                    >
-                      4
-                    </Typography>
-                    Delivery Schedule
-                  </ListItemText>
-                </MenuItem>
-              </MenuList>
-              <Box sx={{ display: "flex", padding: "15px" }}>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-                <Box className={classes.boxinput}>
-                  <input className={classes.formInput} type="text" />
-                </Box>
-              </Box>
-            </Paper>
-          </Grid>
-
-          <Grid iteam lg={4}>
-            <Box className={classes.payment}>
-              {existingCart?.products?.length &&
-                existingCart.products.map((item) => (
-                  <MenuItem sx={{ marginBottom: "10px" }} key={item}>
-                    <ListItemText>
-                      <Typography variant="div">
-                        {item.qty} x {item.name}
-                      </Typography>
-                    </ListItemText>
-                    <Typography variant="div">${item.totalPrice}</Typography>
-                  </MenuItem>
-                ))}
-
-              <Divider />
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Sub Total</Typography>
-                  </ListItemText>
-                  <Typography variant="div">
-                    ${existingCart.totalProductsPrice}
-                  </Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Tax</Typography>
-                  </ListItemText>
-                  <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Shipping</Typography>
-                  </ListItemText>
-                  <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography>
-                      <Link>Do you have Coupon?</Link>
-                    </Typography>
-                  </ListItemText>
-                </MenuItem>
-              </MenuList>
-
-              <Divider />
-              <Divider />
-
-              <MenuList>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      Sub Total
-                    </Typography>
-                  </ListItemText>
-                  <Typography sx={{ fontWeight: "600" }}>
-                    ${existingCart.totalProductsPrice}
-                  </Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Wallet points</Typography>
-                  </ListItemText>
-                  <Typography variant="div">0</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography variant="div">Wallet currency</Typography>
-                  </ListItemText>
-                  <Typography variant="div">$0.00</Typography>
-                </MenuItem>
-                <MenuItem sx={{ marginBottom: "10px" }}>
-                  <ListItemText>
-                    <Typography>
-                      <Checkbox {...label} color="default" />
-                      <Link>Do you have Coupon?</Link>
-                    </Typography>
-                  </ListItemText>
-                </MenuItem>
-              </MenuList>
-              <Paper sx={{ marginTop: "15px" }}>
-                <Box
-                  sx={{
-                    width: "100%",
-                    textAlign: "center",
-                    marginBottom: "15px",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "600" }}>
-                    Choose Payment Method
-                  </Typography>
-                  <Box>
-                    <TabsUnstyled defaultValue={0}>
-                      <TabsListUnstyled className={classes.tabListPay}>
-                        <TabUnstyled className={classes.tabPay}>
-                          Stripe
-                        </TabUnstyled>
-                        <TabUnstyled className={classes.tabPay}>
-                          Cash On Delivery
-                        </TabUnstyled>
-                      </TabsListUnstyled>
-                      <TabPanelUnstyled
-                        className={classes.tabPanePay}
-                        value={0}
-                      >
-                        <FormControl variant="standard">
-                          <Input
-                            id="input-with-icon-adornment"
-                            startAdornment={
-                              <InputAdornment position="start">
-                                <PaymentIcon />
-                                số thẻ
-                              </InputAdornment>
-                            }
-                          />
-                        </FormControl>
-                      </TabPanelUnstyled>
-                      <TabPanelUnstyled
-                        className={classes.tabPanePay}
-                        value={1}
-                      >
-                        <FormControl variant="standard">
-                          <Input
-                            id="input-with-icon-adornment"
-                            startAdornment={
-                              <InputAdornment position="start">
-                                <PaymentIcon />
-                                số thẻ
-                              </InputAdornment>
-                            }
-                          />
-                        </FormControl>
-                      </TabPanelUnstyled>
-                    </TabsUnstyled>
-                    <Box
-                      sx={{
-                        textAlign: "center",
-                        paddingBottom: "15px",
-                        paddingTop: "10px",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{ backgroundColor: "#40c6ff" }}
-                      >
-                        Success
-                      </Button>
-                    </Box>
-                  </Box>
-                </Box>
-              </Paper>
-              <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
-                <Button
-                  onClick={handleSubmit}
-                  sx={{ width: "100%", backgroundColor: "#40c6ff" }}
-                  variant="contained"
-                >
-                  Success
-                </Button>
-              </Stack>
-            </Box>
-          </Grid>
-        </Box>
-      </Container>
-    </>
+      </AppProvider>
+    </ApolloProvider>
   );
 };
 export default Checkout;

@@ -1,23 +1,21 @@
 import React from "react";
-
-import CountDown from "./Countdown";
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Image_1 from '../assets/img/deals_of_day_1.png';
-import Image_2 from '../assets/img/deals_of_day_2.png';
-import { Container } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from '@mui/material/Link';
+import { Container } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Link from "next/link";
+import Typography from "@mui/material/Typography";
+import Image_1 from "../assets/img/deals_of_day_1.png";
+import Image_2 from "../assets/img/deals_of_day_2.png";
+import CountDown from "./Countdown";
 
-const colorHover = '#40c6ff';
+const colorHover = "#40c6ff";
 const useStyles = makeStyles({
   dealsOfDay: {
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
-    marginTop: "50px"
-
+    marginTop: "50px",
   },
   circle: {
     width: 45,
@@ -42,84 +40,90 @@ const useStyles = makeStyles({
     alignItems: "center",
     marginTop: 30,
     cursor: "pointer",
-    '&:hover': {
+    "&:hover": {
       background: "rgb(64,198,255)",
       color: "#ffff",
-      transition: 'all 0.25s',
-
-    }
+      transition: "all 0.25s",
+    },
   },
   layoutDealsDay: {
     display: "flex",
     justifyContent: "space-between",
     width: "95%",
     flexWrap: "wrap",
-    '@media (max-width: 768px)': {
-      display: "flex"
-    }
+    "@media (max-width: 768px)": {
+      display: "flex",
+    },
   },
   layoutIteam: {
     display: "flex",
     alignItems: "center",
     width: "45%",
-    '@media (max-width: 600px)': {
+    "@media (max-width: 600px)": {
       display: "block",
       width: "100%",
-      marginBottom: "30px"
+      marginBottom: "30px",
     },
-    '@media (max-width: 768px)': {
+    "@media (max-width: 768px)": {
       display: "flex",
     },
-    '@media (max-width: 1100px)': {
+    "@media (max-width: 1100px)": {
       display: "block",
     },
-
   },
   buttonLink: {
     textDecoration: "none",
-    '&:hover': {
+    "&:hover": {
       color: "#fff",
-      transition: 'all 0.25s',
-    }
+      transition: "all 0.25s",
+    },
   },
   nameProSales: {
-    fontFamily: 'Mulish,sans-serif',
-    fontSize: '19px',
-    fontWeight: 'bold',
-    color: '#444',
-    marginBottom: '10px',
+    fontFamily: "Mulish,sans-serif",
+    fontSize: "19px",
+    fontWeight: "bold",
+    color: "#444",
+    marginBottom: "10px",
   },
   titleHome: {
-    fontFamily: 'Merriweather,sans-serif',
-    color: '#444444',
-    fontSize: '24px',
-    fontWeight: 'bold',
-    margin: '30px 0px 25px 0px',
-    '& span': {
-      position: 'relative',
-      display: 'inline-block',
-      '&::after': {
-        position: 'absolute',
+    fontFamily: "Merriweather,sans-serif",
+    color: "#444444",
+    fontSize: "24px",
+    fontWeight: "bold",
+    margin: "30px 0px 25px 0px",
+    "& span": {
+      position: "relative",
+      display: "inline-block",
+      "&::after": {
+        position: "absolute",
         content: '""',
-        width: '15px',
-        height: '1px',
-        left: '-30px',
-        top: '18px',
+        width: "15px",
+        height: "1px",
+        left: "-30px",
+        top: "18px",
         backgroundColor: `${colorHover}`,
       },
-      '&::before': {
-        position: 'absolute',
+      "&::before": {
+        position: "absolute",
         content: '""',
-        width: '15px',
-        height: '1px',
-        right: '-30px',
-        top: '18px',
+        width: "15px",
+        height: "1px",
+        right: "-30px",
+        top: "18px",
         backgroundColor: `${colorHover}`,
-      }
-    }
+      },
+    },
+  },
+  descPro: {
+    color: "#666",
+    margin: "18px 8px 27px 0px",
+    textDecoration: "none",
   },
 });
-export default function DealsOfDay() {
+export default function DealsOfDay(props) {
+  const { productDeal } = props;
+  console.log(productDeal);
+
   const classes = useStyles();
   return (
     <Container>
@@ -136,114 +140,88 @@ export default function DealsOfDay() {
           </Typography>
         </Box>
         <Box className={classes.layoutDealsDay}>
-          <Box className={classes.layoutIteam}>
-            <Box
-              style={{
-                position: "relative",
-                textAlign: "center",
-                color: "white",
-                border: "1px solid #f1f1f1",
-              }}
-            >
-              <img
-                src={Image_1.src}
-                style={{
-                  width: 264,
-                }}
-              />
-              <Box className={classes.circle}>
-                <Typography style={{ fontSize: 14 }}>-22%</Typography>
-              </Box>
-            </Box>
-            <Typography style={{ marginLeft: 30 }}>
-            <Link href="/product/Torchiere-Floor-Lamp" className={classes.buttonLink} >
-              <Typography className={classes.nameProSales}>
-                Torchiere Floor Lamp
-              </Typography>
-              </Link>
-              <Typography
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  display: "flex",
-                }}
-              >
-                <Typography
-                  style={{
-                    color: "#999",
-                    margin: "0px 20px 0px 0px",
-                    textDecoration: "line-through",
-                  }}
-                >
-                  $90.00
-                </Typography>
-                <Typography style={{ color: "rgb(64,198,255)", margin: 0 }}>$71.00</Typography>
-              </Typography>
-              <Typography style={{ color: "#666", margin: "18px 8px 27px 0px" }}>
-                Black finish thin profile metal pole and base. White polyresin
-                torchiere shade.
-              </Typography>
-              <CountDown />
-              <Box className={classes.button}>
-                <Link href="/product/Torchiere-Floor-Lamp" className={classes.buttonLink} >
-                  <Typography sx={{ fontSize: "14px", fontWeight: "600", }}>SHOP NOW</Typography>
-                </Link>
-              </Box>
-            </Typography>
-          </Box>
-          <Box className={classes.layoutIteam}>
-            <Box
-              style={{
-                position: "relative",
-                textAlign: "center",
-                border: "1px solid #f1f1f1",
-                color: "#fff",
-              }}
-            >
-              <img
-                src={Image_2.src}
-                style={{
-                  width: 264,
-                }}
-              />
-              <Box className={classes.circle}>
-                <Typography style={{ fontSize: 14 }}>-39%</Typography>
-              </Box>
-            </Box>
-            <Box style={{ marginLeft: 30 }}>
-            <Link href="/product/small-condenser-microphone" className={classes.buttonLink}>
-              <Typography className={classes.nameProSales} >
-                Condenser Headphone
-              </Typography>
-              </Link>
-              <Typography style={{ fontSize: 20, fontWeight: "bold", display: "flex" }}>
-                <Typography
-                  style={{
-                    color: "#999",
-                    margin: "0px 20px 0px 0px",
-                    textDecoration: "line-through",
-                  }}
-                >
-                  $310.00
-                </Typography>
-                <Typography style={{ color: "rgb(64,198,255)", margin: 0 }}>$190.00</Typography>
-              </Typography>
-              <Typography style={{ color: "#666", margin: "18px 8px 27px 0px" }}>
-                Caramel Ice Cream with a Swirl of Caramel & Fudge Covered Caramel
-                Chunks. Caramel lovers wont want to...
-              </Typography>
-              <CountDown />
-              <Box className={classes.button}>
-                <Link href="/product/small-condenser-microphone" className={classes.buttonLink}>
-                  <Typography sx={{ fontSize: "14px", fontWeight: "600", }}>SHOP NOW</Typography>
-                </Link>
-              </Box>
-            </Box>
-          </Box>
+          {productDeal &&
+            productDeal.map((items, index) => (
+              <>
+                <Box key={index} className={classes.layoutIteam}>
+                  <Box
+                    style={{
+                      position: "relative",
+                      textAlign: "center",
+                      color: "white",
+                      border: "1px solid #f1f1f1",
+                    }}
+                  >
+                    <img
+                      src={items.image?.sourceUrl}
+                      style={{
+                        width: 264,
+                      }}
+                    />
+                    <Box className={classes.circle}>
+                      <Typography style={{ fontSize: 14 }}>-22%</Typography>
+                    </Box>
+                  </Box>
+                  <Typography style={{ marginLeft: 30 }}>
+                    <Link
+                      href={`/product/${items?.slug}`}
+                      className={classes.buttonLink}
+                    >
+                      <a>
+                        <Typography className={classes.nameProSales}>
+                          {items?.name}
+                        </Typography>
+                      </a>
+                    </Link>
+                    <Typography
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        display: "flex",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          color: "#999",
+                          margin: "0px 20px 0px 0px",
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        {items.regularPrice}
+                      </Typography>
+                      <Typography
+                        style={{ color: "rgb(64,198,255)", margin: 0 }}
+                      >
+                        {items.price}
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      style={{ color: "#666", margin: "18px 8px 27px 0px" }}
+                    >
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been....
+                    </Typography>
+                    <CountDown />
+                    <Box className={classes.button}>
+                      <Link
+                        href={`/product/${items?.slug}`}
+                        className={classes.buttonLink}
+                      >
+                        <a>
+                          <Typography
+                            sx={{ fontSize: "14px", fontWeight: "600" }}
+                          >
+                            SHOP NOW
+                          </Typography>
+                        </a>
+                      </Link>
+                    </Box>
+                  </Typography>
+                </Box>
+              </>
+            ))}
         </Box>
       </Grid>
     </Container>
   );
 }
-
-
