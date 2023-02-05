@@ -122,8 +122,6 @@ const useStyles = makeStyles({
 });
 export default function DealsOfDay(props) {
   const { productDeal } = props;
-  console.log(productDeal);
-
   const classes = useStyles();
   return (
     <Container>
