@@ -1,11 +1,9 @@
-import React from "react";
-import { isEmpty, map } from "lodash";
-import Abbr from "./form-elements/Abbr";
-import SvgArrowDown from "../icons/ArrowDown";
-import Error from "./Error";
-import { Box, TextField, Typography } from "@mui/material";
+import { MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { Box, TextField } from "@mui/material";
+import { isEmpty, map } from "lodash";
+import React from "react";
+import Error from "./Error";
 
 const useStyles = makeStyles({});
 const CountrySelection = ({ input, handleOnChange, countries, isShipping }) => {
@@ -25,10 +23,10 @@ const CountrySelection = ({ input, handleOnChange, countries, isShipping }) => {
         label="Country"
         onChange={handleOnChange}
       >
-        {!isEmpty(countries) &&
-          map(countries, (country) => (
+        {countries &&
+          countries.map((country, index) => (
             <MenuItem
-              key={country?.code}
+              key={index}
               data-countrycode={country?.code}
               value={country?.code}
             >

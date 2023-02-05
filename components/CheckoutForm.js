@@ -346,7 +346,7 @@ const CheckoutForm = (props) => {
   const isOrderProcessing = checkoutLoading || isStripeOrderProcessing;
 
   return (
-    <>
+    <Box>
       {cart ? (
         <form onSubmit={handleFormSubmit} className={classes.checkoutForm}>
           <Grid container spacing={1}>
@@ -430,7 +430,7 @@ const CheckoutForm = (props) => {
         </form>
       ) : null}
       <OrderSuccess response={checkoutResponse} />
-    </>
+    </Box>
   );
 };
 export default CheckoutForm;
