@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
+import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import Image_1 from "../assets/img/deals_of_day_1.png";
 import Image_2 from "../assets/img/deals_of_day_2.png";
@@ -120,7 +120,10 @@ const useStyles = makeStyles({
     textDecoration: "none",
   },
 });
-export default function DealsOfDay() {
+export default function DealsOfDay(props) {
+  const { productDeal } = props;
+  console.log(productDeal);
+
   const classes = useStyles();
   return (
     <Container>
@@ -137,134 +140,86 @@ export default function DealsOfDay() {
           </Typography>
         </Box>
         <Box className={classes.layoutDealsDay}>
-          <Box className={classes.layoutIteam}>
-            <Box
-              style={{
-                position: "relative",
-                textAlign: "center",
-                color: "white",
-                border: "1px solid #f1f1f1",
-              }}
-            >
-              <img
-                src={Image_1.src}
-                style={{
-                  width: 264,
-                }}
-              />
-              <Box className={classes.circle}>
-                <Typography style={{ fontSize: 14 }}>-22%</Typography>
-              </Box>
-            </Box>
-            <Typography style={{ marginLeft: 30 }}>
-              <Link
-                href="/product/Torchiere-Floor-Lamp"
-                className={classes.buttonLink}
-              >
-                <Typography className={classes.nameProSales}>
-                  Torchiere Floor Lamp
-                </Typography>
-              </Link>
-              <Typography
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  display: "flex",
-                }}
-              >
-                <Typography
-                  style={{
-                    color: "#999",
-                    margin: "0px 20px 0px 0px",
-                    textDecoration: "line-through",
-                  }}
-                >
-                  $90.00
-                </Typography>
-                <Typography style={{ color: "rgb(64,198,255)", margin: 0 }}>
-                  $71.00
-                </Typography>
-              </Typography>
-              <Typography
-                style={{ color: "#666", margin: "18px 8px 27px 0px" }}
-              >
-                Black finish thin profile metal pole and base. White polyresin
-                torchiere shade.
-              </Typography>
-              <CountDown />
-              <Box className={classes.button}>
-                <Link
-                  href="/product/Torchiere-Floor-Lamp"
-                  className={classes.buttonLink}
-                >
-                  <Typography sx={{ fontSize: "14px", fontWeight: "600" }}>
-                    SHOP NOW
+          {productDeal &&
+            productDeal.map((items, index) => (
+              <>
+                <Box key={index} className={classes.layoutIteam}>
+                  <Box
+                    style={{
+                      position: "relative",
+                      textAlign: "center",
+                      color: "white",
+                      border: "1px solid #f1f1f1",
+                    }}
+                  >
+                    <img
+                      src={items.image?.sourceUrl}
+                      style={{
+                        width: 264,
+                      }}
+                    />
+                    <Box className={classes.circle}>
+                      <Typography style={{ fontSize: 14 }}>-22%</Typography>
+                    </Box>
+                  </Box>
+                  <Typography style={{ marginLeft: 30 }}>
+                    <Link
+                      href={`/product/${items?.slug}`}
+                      className={classes.buttonLink}
+                    >
+                      <a>
+                        <Typography className={classes.nameProSales}>
+                          {items?.name}
+                        </Typography>
+                      </a>
+                    </Link>
+                    <Typography
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        display: "flex",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          color: "#999",
+                          margin: "0px 20px 0px 0px",
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        {items.regularPrice}
+                      </Typography>
+                      <Typography
+                        style={{ color: "rgb(64,198,255)", margin: 0 }}
+                      >
+                        {items.price}
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      style={{ color: "#666", margin: "18px 8px 27px 0px" }}
+                    >
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been....
+                    </Typography>
+                    <CountDown />
+                    <Box className={classes.button}>
+                      <Link
+                        href={`/product/${items?.slug}`}
+                        className={classes.buttonLink}
+                      >
+                        <a>
+                          <Typography
+                            sx={{ fontSize: "14px", fontWeight: "600" }}
+                          >
+                            SHOP NOW
+                          </Typography>
+                        </a>
+                      </Link>
+                    </Box>
                   </Typography>
-                </Link>
-              </Box>
-            </Typography>
-          </Box>
-          <Box className={classes.layoutIteam}>
-            <Box
-              style={{
-                position: "relative",
-                textAlign: "center",
-                border: "1px solid #f1f1f1",
-                color: "#fff",
-              }}
-            >
-              <img
-                src={Image_2.src}
-                style={{
-                  width: 264,
-                }}
-              />
-              <Box className={classes.circle}>
-                <Typography style={{ fontSize: 14 }}>-39%</Typography>
-              </Box>
-            </Box>
-            <Box style={{ marginLeft: 30 }}>
-              <Link
-                href="/product/small-condenser-microphone"
-                className={classes.buttonLink}
-              >
-                <Typography className={classes.nameProSales}>
-                  Condenser Headphone
-                </Typography>
-              </Link>
-              <Typography
-                style={{ fontSize: 20, fontWeight: "bold", display: "flex" }}
-              >
-                <Typography
-                  style={{
-                    color: "#999",
-                    margin: "0px 20px 0px 0px",
-                    textDecoration: "line-through",
-                  }}
-                >
-                  $310.00
-                </Typography>
-                <Typography style={{ color: "rgb(64,198,255)", margin: 0 }}>
-                  $190.00
-                </Typography>
-              </Typography>
-              <Typography className={classes.descPro}>
-                Caramel Ice Cream with a Swirl of Caramel & Fudge Covered
-                Caramel Chunks. Caramel lovers wont want to...
-              </Typography>
-              <CountDown />
-              <Box className={classes.button}>
-                <Link
-                  href="/product/small-condenser-microphone"
-                  className={classes.buttonLink}
-                >
-                  <Typography sx={{ fontSize: "14px", fontWeight: "600" }}>
-                    SHOP NOW
-                  </Typography>
-                </Link>
-              </Box>
-            </Box>
-          </Box>
+                </Box>
+              </>
+            ))}
         </Box>
       </Grid>
     </Container>

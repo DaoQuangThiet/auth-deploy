@@ -192,26 +192,9 @@ const CartItemsContainer = () => {
   };
   const router = useRouter();
   const classes = useStyles_cart();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => router.push("/checkout");
   const handleClose = () => setOpen(false);
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
-  const formik = useFormik({
-    initialValues: {
-      email: "admin@gmail.com",
-      password: "admin123",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      if (values.email == "admin@gmail.com" && values.password == "admin123") {
-        router.push("/checkout");
-      } else {
-        alert("Wrong user");
-      }
-    },
-  });
+ 
   return (
     <>
       <div className={classes.cartMain}>
@@ -351,81 +334,7 @@ const CartItemsContainer = () => {
                     <Button variant="contained" onClick={handleOpen}>
                       Proceeed to checkout
                     </Button>
-                    <Modal
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <Typography component="h4" variant="h4">
-                          Login
-                        </Typography>
-                        <form onSubmit={formik.handleSubmit}>
-                          <Typography
-                            sx={{ marginBottom: "15px", marginTop: "20px" }}
-                          >
-                            Username or email address *
-                          </Typography>
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="email"
-                            name="email"
-                            label="Email"
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            error={
-                              formik.touched.email &&
-                              Boolean(formik.errors.email)
-                            }
-                            helperText={
-                              formik.touched.email && formik.errors.email
-                            }
-                          />
-                          <Typography
-                            sx={{ marginBottom: "15px", marginTop: "20px" }}
-                          >
-                            Password *
-                          </Typography>
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="password"
-                            name="password"
-                            label="Password"
-                            type="password"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            error={
-                              formik.touched.password &&
-                              Boolean(formik.errors.password)
-                            }
-                            helperText={
-                              formik.touched.password && formik.errors.password
-                            }
-                          />
-
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            type="submit"
-                            sx={{
-                              marginTop: "20px",
-                              borderRadius: "25px",
-                              width: "100px",
-                            }}
-                          >
-                            Login
-                          </Button>
-                        </form>
-                      </Box>
-                    </Modal>
                   </Box>
-
-                  {/* <Link href="/checkout">
-                                    <Button variant="contained">UPDATE CART</Button>
-                                </Link> */}
                 </Paper>
               </Box>
             </Grid>

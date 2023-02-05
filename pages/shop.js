@@ -216,14 +216,6 @@ export default function Shop(props) {
               <List>
                 <ListItem disablePadding>
                   <ListItemButton className={classes.categoryText}>
-                    <ListItemText onClick={() => handleSubmit(`Smartphone`)}>
-                      Beauty, Health
-                    </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                  <ListItemButton className={classes.categoryText}>
                     <ListItemText onClick={() => handleSubmit(`Books`)}>
                       Book
                     </ListItemText>

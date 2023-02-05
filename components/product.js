@@ -1,11 +1,9 @@
-import React, { Component, useState } from "react";
-import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Link from "next/link";
-import Rating from "@mui/material/Rating";
 import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@mui/material/Grid";
+import Rating from "@mui/material/Rating";
 import { Box } from "@mui/system";
+import Link from "next/link";
+import React from "react";
 
 const colorHeading = "#323232";
 const colorHover = "#40c6ff";

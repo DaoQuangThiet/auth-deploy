@@ -1,10 +1,9 @@
-import React from "react";
 import { Container, Grid } from "@mui/material";
+import React from "react";
 import MenuListComposition from "../components/menu";
 import ResponsiveAppBar from "../components/menuPhu";
 
 // import banerHome
-import bannerHome from "../assets/img/bannerHome.png";
 
 const HeaderCenter = () => {
   return (
