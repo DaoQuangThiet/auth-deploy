@@ -252,7 +252,7 @@ export default function Product(props) {
           {product ? (
             <div className={classes.singleProduct}>
               <Container maxWidth="lg">
-                <Grid container direction="row" lg={12}>
+                <Grid container direction="row" item lg={12}>
                   <Grid item xs={12} sm={12} md={6} lg={6}>
                     <div className={classes.imgagesDetail}>
                       <img src={product?.image?.sourceUrl} alt="" />
@@ -316,8 +316,8 @@ export default function Product(props) {
                   <div className={classes.box_related_products}>
                     <h4>Related products</h4>
                     {product.related.nodes.length
-                      ? product.related.nodes.map((item) => (
-                          <div className={classes.related_products} key={item}>
+                      ? product.related.nodes.map((item, index) => (
+                          <div className={classes.related_products} key={index}>
                             <div className={classes.box_product}>
                               <Link href={`/product/${item?.slug}`}>
                                 <a>
@@ -338,7 +338,7 @@ export default function Product(props) {
                                   </Link>
                                 </h3>
                                 <div className={classes.startRating}>
-                                  <Rating name="read-only" value="0" readOnly />
+                                  <Rating name="read-only" value={0} readOnly />
                                 </div>
                                 <h4 className={classes.cardPrice}>
                                   <span className={classes.price_sales}>

@@ -140,83 +140,79 @@ export default function DealsOfDay(props) {
         <Box className={classes.layoutDealsDay}>
           {productDeal &&
             productDeal.map((items, index) => (
-              <>
-                <Box key={index} className={classes.layoutIteam}>
+              <Box key={index} className={classes.layoutIteam}>
+                <Box
+                  style={{
+                    position: "relative",
+                    textAlign: "center",
+                    color: "white",
+                    border: "1px solid #f1f1f1",
+                  }}
+                >
+                  <img
+                    src={items.image?.sourceUrl}
+                    style={{
+                      width: 264,
+                    }}
+                  />
+                  <Box className={classes.circle}>
+                    <Typography style={{ fontSize: 14 }}>-22%</Typography>
+                  </Box>
+                </Box>
+                <Box style={{ marginLeft: 30 }}>
+                  <Link
+                    href={`/product/${items?.slug}`}
+                    className={classes.buttonLink}
+                  >
+                    <a>
+                      <Typography className={classes.nameProSales}>
+                        {items?.name}
+                      </Typography>
+                    </a>
+                  </Link>
                   <Box
                     style={{
-                      position: "relative",
-                      textAlign: "center",
-                      color: "white",
-                      border: "1px solid #f1f1f1",
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      display: "flex",
                     }}
                   >
-                    <img
-                      src={items.image?.sourceUrl}
+                    <Typography
                       style={{
-                        width: 264,
+                        color: "#999",
+                        margin: "0px 20px 0px 0px",
+                        textDecoration: "line-through",
                       }}
-                    />
-                    <Box className={classes.circle}>
-                      <Typography style={{ fontSize: 14 }}>-22%</Typography>
-                    </Box>
+                    >
+                      {items.regularPrice}
+                    </Typography>
+                    <Typography style={{ color: "rgb(64,198,255)", margin: 0 }}>
+                      {items.price}
+                    </Typography>
                   </Box>
-                  <Typography style={{ marginLeft: 30 }}>
+                  <Typography
+                    style={{ color: "#666", margin: "18px 8px 27px 0px" }}
+                  >
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been....
+                  </Typography>
+                  <CountDown />
+                  <Box className={classes.button}>
                     <Link
                       href={`/product/${items?.slug}`}
                       className={classes.buttonLink}
                     >
                       <a>
-                        <Typography className={classes.nameProSales}>
-                          {items?.name}
+                        <Typography
+                          sx={{ fontSize: "14px", fontWeight: "600" }}
+                        >
+                          SHOP NOW
                         </Typography>
                       </a>
                     </Link>
-                    <Typography
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        display: "flex",
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          color: "#999",
-                          margin: "0px 20px 0px 0px",
-                          textDecoration: "line-through",
-                        }}
-                      >
-                        {items.regularPrice}
-                      </Typography>
-                      <Typography
-                        style={{ color: "rgb(64,198,255)", margin: 0 }}
-                      >
-                        {items.price}
-                      </Typography>
-                    </Typography>
-                    <Typography
-                      style={{ color: "#666", margin: "18px 8px 27px 0px" }}
-                    >
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been....
-                    </Typography>
-                    <CountDown />
-                    <Box className={classes.button}>
-                      <Link
-                        href={`/product/${items?.slug}`}
-                        className={classes.buttonLink}
-                      >
-                        <a>
-                          <Typography
-                            sx={{ fontSize: "14px", fontWeight: "600" }}
-                          >
-                            SHOP NOW
-                          </Typography>
-                        </a>
-                      </Link>
-                    </Box>
-                  </Typography>
+                  </Box>
                 </Box>
-              </>
+              </Box>
             ))}
         </Box>
       </Grid>

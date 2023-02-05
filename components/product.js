@@ -95,7 +95,7 @@ export default function Product(props) {
               </Link>
             </h3>
             <Box className={classes.startRating}>
-              <Rating name="read-only" value="0" readOnly />
+              <Rating name="read-only" value={0} readOnly />
             </Box>
             {product?.regularPrice === product?.price ? (
               <h4 className={classes.cardPrice}>

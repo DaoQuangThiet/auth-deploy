@@ -123,8 +123,8 @@ const Home = (props) => {
             columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
           >
             {products.length
-              ? products.map((product) => (
-                  <Product key={product.id} product={product} />
+              ? products.map((product, index) => (
+                  <Product key={index} product={product} />
                 ))
               : ""}
           </Grid>
@@ -139,8 +139,8 @@ const Home = (props) => {
             columns={{ xs: 4, sm: 6, md: 4, lg: 4 }}
           >
             {productseller.length
-              ? productseller.map((product) => (
-                  <Product key={product.id} product={product} />
+              ? productseller.map((product, index) => (
+                  <Product key={index} product={product} />
                 ))
               : ""}
           </Grid>
