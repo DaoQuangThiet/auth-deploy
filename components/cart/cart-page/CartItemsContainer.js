@@ -104,6 +104,7 @@ const CartItemsContainer = () => {
   } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
     onCompleted: () => {
+      setShowAlert(!showAlert);
       // Update cart in the localStorage.
       const updatedCart = getFormattedCart(data);
       localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
@@ -214,22 +215,22 @@ const CartItemsContainer = () => {
                 {clearCartProcessing ? <p>Clearing...</p> : ""}
                 {updateCartProcessing ? <p>Updating...</p> : null}
                 {loadingCart ? <p>Updating...</p> : null}
-                {/* {updateCartProcessing && loadingCart && (
-                  <Snackbar
-                    open={setShowAlert(true)}
-                    autoHideDuration={5000}
+                {/* {updateCartProcessing && loadingCart && ( */}
+                <Snackbar
+                  open={showAlert}
+                  autoHideDuration={5000}
+                  onClose={handleCloseAlert}
+                >
+                  <Alert
+                    variant="filled"
+                    severity="success"
                     onClose={handleCloseAlert}
+                    sx={{ width: "100%" }}
                   >
-                    <Alert
-                      variant="filled"
-                      severity="success"
-                      onClose={handleCloseAlert}
-                      sx={{ width: "100%" }}
-                    >
-                      Add to cart successfully!
-                    </Alert>
-                  </Snackbar>
-                )} */}
+                    Update cart successfully!
+                  </Alert>
+                </Snackbar>
+                {/* )} */}
 
                 <TableContainer className="table table-hover">
                   <Table>
