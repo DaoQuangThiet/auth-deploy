@@ -5,12 +5,12 @@ import { AppContext, AppProvider } from "../../../libs/context/AppContext";
 //import { getFormattedCart, getUpdatedItems } from '../../../functions';
 import CartItem from "./Cartitem";
 import { v4 } from "uuid";
-import { Button, Grid } from "@mui/material";
+import { Alert, Button, Grid, Snackbar } from "@mui/material";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   getFormattedCart,
   getUpdatedItems,
-  removeItemFromCart,
+  removeItemFromCart
 } from "../../../function";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
@@ -49,35 +49,35 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  p: 4
 };
 
 const useStyles_cart = makeStyles((theme) => ({
   wooNextCartWrapper: {
     display: "flex",
     "@media (max-width: 768px)": {
-      display: "block",
-    },
+      display: "block"
+    }
   },
   buttonCheckout: {
     textAlign: "center",
     marginTop: "10px",
     marginBottom: "15px",
-    paddingBottom: "20px",
+    paddingBottom: "20px"
   },
   cartTotal: {
     background: "rgb(231, 235, 240)",
-    marginTop: "30px",
+    marginTop: "30px"
   },
   tableCart: {
-    paddingRight: "50px",
+    paddingRight: "50px"
   },
   buttonContinue: {
-    marginTop: "20px",
+    marginTop: "20px"
   },
   cartTotalLeft: {
-    paddingTop: "16px",
-  },
+    paddingTop: "16px"
+  }
 }));
 
 const validationSchema = yup.object({
@@ -88,11 +88,12 @@ const validationSchema = yup.object({
   password: yup
     .string("Enter your password")
     .min(6, "Password should be of minimum 6 characters length")
-    .required("Password is required"),
+    .required("Password is required")
 });
 const CartItemsContainer = () => {
   const [cart, setCart] = useContext(AppContext);
   const [requestError, setRequestError] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
 
   // Get Cart Data.
   const { loading, error, data, refetch } = useQuery(GET_CART, {
@@ -104,7 +105,7 @@ const CartItemsContainer = () => {
 
       // Update cart data in React Context.
       setCart(updatedCart);
-    },
+    }
   });
 
   // Update Cart Mutation.
@@ -113,8 +114,8 @@ const CartItemsContainer = () => {
     {
       data: updateCartResponse,
       loading: updateCartProcessing,
-      error: updateCartError,
-    },
+      error: updateCartError
+    }
   ] = useMutation(UPDATE_CART, {
     onCompleted: () => {
       refetch();
@@ -126,13 +127,13 @@ const CartItemsContainer = () => {
           : "";
         setRequestError(errorMessage);
       }
-    },
+    }
   });
 
   // Clear Cart Mutation.
   const [
     clearCart,
-    { data: clearCartRes, loading: clearCartProcessing, error: clearCartError },
+    { data: clearCartRes, loading: clearCartProcessing, error: clearCartError }
   ] = useMutation(CLEAR_CART_MUTATION, {
     onCompleted: () => {
       refetch();
@@ -144,7 +145,7 @@ const CartItemsContainer = () => {
           : "";
         setRequestError(errorMessage);
       }
-    },
+    }
   });
 
   /*
@@ -157,6 +158,7 @@ const CartItemsContainer = () => {
    */
   const handleRemoveProductClick = (event, cartKey, products) => {
     event.stopPropagation();
+    setShowAlert(true);
     if (products.length) {
       // By passing the newQty to 0 in updateCart Mutation, it will remove the item.
       const newQty = 0;
@@ -166,9 +168,9 @@ const CartItemsContainer = () => {
         variables: {
           input: {
             clientMutationId: v4(),
-            items: updatedItems,
-          },
-        },
+            items: updatedItems
+          }
+        }
       });
     }
   };
@@ -185,16 +187,19 @@ const CartItemsContainer = () => {
       variables: {
         input: {
           clientMutationId: v4(),
-          all: true,
-        },
-      },
+          all: true
+        }
+      }
     });
   };
   const router = useRouter();
   const classes = useStyles_cart();
   const handleOpen = () => router.push("/checkout");
   const handleClose = () => setOpen(false);
- 
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
   return (
     <>
       <div className={classes.cartMain}>
@@ -204,6 +209,7 @@ const CartItemsContainer = () => {
               <Box className={classes.tableCart}>
                 {clearCartProcessing ? <p>Clearing...</p> : ""}
                 {updateCartProcessing ? <p>Updating...</p> : null}
+
                 <TableContainer className="table table-hover">
                   <Table>
                     <TableHead>

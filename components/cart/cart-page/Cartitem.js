@@ -13,16 +13,16 @@ import { v4 } from "uuid";
 
 const useStyles_cartItem = makeStyles((theme) => ({
   cartelementPrice: {
-    color: "rgb(64,198,255)",
+    color: "rgb(64,198,255)"
   },
   cartelementTotal: {
-    color: "rgb(64,198,255)",
+    color: "rgb(64,198,255)"
   },
   cartqtyinput: {
     width: "50%",
     height: "40px",
-    paddingLeft: "10px",
-  },
+    paddingLeft: "10px"
+  }
 }));
 
 const CartItem = ({
@@ -30,7 +30,7 @@ const CartItem = ({
   products,
   updateCartProcessing,
   handleRemoveProductClick,
-  updateCart,
+  updateCart
 }) => {
   const [productCount, setProductCount] = useState(item.qty);
 
@@ -56,9 +56,9 @@ const CartItem = ({
           variables: {
             input: {
               clientMutationId: v4(),
-              items: updatedItems,
-            },
-          },
+              items: updatedItems
+            }
+          }
         });
       }
     }
@@ -70,6 +70,7 @@ const CartItem = ({
       {/*Icon close */}
       <TableCell className={classes.cartelement}>
         <Typography
+          sx={{ cursor: "pointer" }}
           className={classes.cartcloseicon}
           onClick={(event) =>
             handleRemoveProductClick(event, item.cartKey, products)

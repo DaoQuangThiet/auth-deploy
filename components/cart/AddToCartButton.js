@@ -10,12 +10,13 @@ import { v4 } from "uuid";
 import { useMutation, useQuery } from "@apollo/client";
 import GET_CART from "../../libs/queries/get-cart";
 import ADD_TO_CART from "../../libs/mutations/add-to-cart";
+import { Alert, Snackbar } from "@mui/material";
 
 const colorHover = "#40c6ff";
 
 const useStyles = makeStyles({
   btnviewcart: {
-    margin: "25px",
+    margin: "25px"
   },
   AddToCartButton: {
     borderRadius: "20px",
@@ -29,12 +30,12 @@ const useStyles = makeStyles({
     fontSize: "16px",
     marginTop: "20px",
     "&:hover": {
-      cursor: "pointer",
+      cursor: "pointer"
     },
     "&:last-child": {
-      marginLeft: "20px",
-    },
-  },
+      marginLeft: "20px"
+    }
+  }
 });
 
 const AddToCartButton = (props) => {
@@ -43,9 +44,13 @@ const AddToCartButton = (props) => {
   const [cart, setCart] = useContext(AppContext);
   const [showViewCart, setShowViewCart] = useState(false);
   const [requestError, setRequestError] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const handleClose = () => {
+    setShowAlert(false);
+  };
   const productQryInput = {
     clientMutationId: v4(),
-    productId: product.productId,
+    productId: product.productId
   };
 
   const { data, refetch } = useQuery(GET_CART, {
@@ -55,14 +60,14 @@ const AddToCartButton = (props) => {
       localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
 
       setCart(updatedCart);
-    },
+    }
   });
   const [
     addToCart,
-    { data: addToCartRes, loading: addToCartLoading, error: addToCartError },
+    { data: addToCartRes, loading: addToCartLoading, error: addToCartError }
   ] = useMutation(ADD_TO_CART, {
     variables: {
-      input: productQryInput,
+      input: productQryInput
     },
     onCompleted: () => {
       refetch();
@@ -72,12 +77,13 @@ const AddToCartButton = (props) => {
       if (error) {
         setRequestError(error.graphQLErrors?.[0]?.message ?? "");
       }
-    },
+    }
   });
 
   const handleAddToCartClick = async () => {
     setRequestError(null);
     await addToCart();
+    setShowAlert(true);
     // if (process.browser) {
     //   let existingCart = localStorage.getItem("woo-next-cart");
 
@@ -108,14 +114,26 @@ const AddToCartButton = (props) => {
         >
           {addToCartLoading ? "Adding To Cart..." : "Add To Cart"}
         </button>
-        {showViewCart ? (
+        <Snackbar
+          open={showAlert}
+          autoHideDuration={5000}
+          onClose={handleClose}
+        >
+          <Alert
+            variant="filled"
+            severity="success"
+            onClose={handleClose}
+            sx={{ width: "100%" }}
+          >
+            Add to cart successfully!
+          </Alert>
+        </Snackbar>
+        {showViewCart && (
           <Link href="/cart">
             <a>
               <button className={classes.AddToCartButton}>View Cart</button>
             </a>
           </Link>
-        ) : (
-          ""
         )}
       </React.Fragment>
     </AppProvider>
