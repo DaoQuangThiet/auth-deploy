@@ -11,23 +11,21 @@ import { AppProvider } from "../libs/context/AppContext";
 import { ApolloProvider } from "@apollo/client";
 import client from "../libs/apollo/ApolloClient";
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
   return (
-    // <AppProvider>
-    //   <ApolloProvider client={client}>
-    <div>
-      <AddHead />
-      <SideBarTop />
-      <HeaderMid />
-      <HeaderCenter />
-
-      {children}
-
-      <Footer />
-      <Copyright />
-    </div>
-    //   </ApolloProvider>
-    // </AppProvider>
+    <AppProvider>
+      <ApolloProvider client={client}>
+        <div>
+          <AddHead />
+          <SideBarTop />
+          <HeaderMid />
+          <HeaderCenter />
+          {props.children}
+          <Footer />
+          <Copyright />
+        </div>
+      </ApolloProvider>
+    </AppProvider>
   );
 };
 export default Layout;

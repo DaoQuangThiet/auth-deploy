@@ -39,10 +39,10 @@ const CartIcon = () => {
     <React.Fragment>
       <AppProvider>
         <Link href="/cart">
-          <div className={classes.containercart}>
+          <a className={classes.containercart}>
             <LocalMallOutlinedIcon />
             {productsCount ? <span>{productsCount}</span> : ""}
-          </div>
+          </a>
         </Link>
       </AppProvider>
     </React.Fragment>

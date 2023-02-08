@@ -52,7 +52,7 @@ const Cart = (props) => {
   const classes = useStyles();
 
   return (
-    <AppProvider>
+    <>
       <ApolloProvider client={client}>
         <Box className={classes.page}>
           <Container>
@@ -101,7 +101,7 @@ const Cart = (props) => {
           <CartItemsContainer />
         </Container>
       </ApolloProvider>
-    </AppProvider>
+    </>
   );
 };
 

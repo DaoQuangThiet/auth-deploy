@@ -17,7 +17,7 @@ import Price from "../../components/single-product/price";
 import client from "../../libs/apollo/ApolloClient";
 import {
   PRODUCT_BY_SLUG_QUERY,
-  PRODUCT_SLUGS,
+  PRODUCT_SLUGS
 } from "../../libs/queries/product-by-slug";
 
 const colorHeading = "#323232";
