@@ -1,6 +1,15 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Button, Grid, MenuList, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Grid,
+  MenuList,
+  Snackbar,
+  Stack,
+  Typography
+} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,7 +24,7 @@ import {
   handleBillingDifferentThanShipping,
   handleCreateAccount,
   handleStripeCheckout,
-  setStatesForCountry,
+  setStatesForCountry
 } from "../utils/checkout";
 import Address from "./checkout/Address";
 import OrderSuccess from "./checkout/OrderSuccess";
@@ -28,14 +37,14 @@ const useStyles = makeStyles({
     marginTop: "30px",
     display: "flex",
     "@media (max-width: 768px)": {
-      display: "block",
-    },
+      display: "block"
+    }
   },
   page: {
     marginBottom: "60px",
     minHeight: "200px",
     backgroundImage: `url(${Banner.src})`,
-    backgroundSize: "cover",
+    backgroundSize: "cover"
   },
 
   titlePage: {
@@ -43,49 +52,49 @@ const useStyles = makeStyles({
     paddingTop: "75px",
     paddingBottom: "75px",
     "@media (max-width: 768px)": {
-      display: "block",
-    },
+      display: "block"
+    }
   },
 
   rightTextPage: {
     paddingTop: "12px",
     float: "right",
     "@media (max-width: 768px)": {
-      float: "inherit",
-    },
+      float: "inherit"
+    }
   },
 
   mainCheckout: {
     marginTop: "30px",
     display: "flex",
     "@media (max-width: 768px)": {
-      display: "block",
-    },
+      display: "block"
+    }
   },
   contactNumber: {
-    marginBottom: "35px",
+    marginBottom: "35px"
   },
   billingAddress: {
-    marginBottom: "35px",
+    marginBottom: "35px"
   },
   shippingAddress: {
-    marginBottom: "35px",
+    marginBottom: "35px"
   },
   delivery: {
     display: "flex",
     padding: "15px",
     "@media (max-width: 350px)": {
-      display: "block",
-    },
+      display: "block"
+    }
   },
   payment: {
     marginLeft: "20px",
     "@media (max-width: 768px)": {
-      marginLeft: "0px",
-    },
+      marginLeft: "0px"
+    }
   },
   tabListPay: {
-    marginBottom: "20px",
+    marginBottom: "20px"
   },
   tabPay: {
     border: "1px solid #40c6ff",
@@ -93,10 +102,10 @@ const useStyles = makeStyles({
     height: "50px",
     background: "white",
     margin: "10px",
-    cursor: "pointer",
+    cursor: "pointer"
   },
   tabPanePay: {
-    margin: "10px",
+    margin: "10px"
   },
   number: {
     border: "1px",
@@ -106,7 +115,7 @@ const useStyles = makeStyles({
     paddingRight: "7px",
     paddingLeft: "7px",
     paddingTop: "3px",
-    paddingBottom: "3px",
+    paddingBottom: "3px"
   },
   style: {
     position: "absolute",
@@ -117,33 +126,33 @@ const useStyles = makeStyles({
     background: "#fff",
     border: "2px solid #000",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   formInput: {
     width: "100%",
 
     height: 45,
     "&:focusVisible": {
-      outline: ["none"],
-    },
+      outline: ["none"]
+    }
   },
   boxinput: {
     width: "100%",
     paddingRight: "10px",
-    paddingLeft: "10px",
+    paddingLeft: "10px"
   },
   textTile: {
     color: "white",
     fontFamily: "Merriweather",
     fontSize: "50px",
-    fontWeight: 700,
+    fontWeight: 700
   },
   titleText: {
     color: "white",
     fontFamily: "Muli",
     fontWeight: 400,
-    fontSize: "14px",
-  },
+    fontSize: "14px"
+  }
 });
 
 // const defaultCustomerInfo = {
@@ -172,7 +181,7 @@ const defaultCustomerInfo = {
   email: "",
   phone: "",
   company: "",
-  errors: null,
+  errors: null
 };
 
 const CheckoutForm = (props) => {
@@ -180,15 +189,15 @@ const CheckoutForm = (props) => {
   const classes = useStyles();
   const initialState = {
     billing: {
-      ...defaultCustomerInfo,
+      ...defaultCustomerInfo
     },
     shipping: {
-      ...defaultCustomerInfo,
+      ...defaultCustomerInfo
     },
     createAccount: false,
     orderNotes: "",
     billingDifferentThanShipping: false,
-    paymentMethod: "cod",
+    paymentMethod: "cod"
   };
 
   const [cart, setCart] = useContext(AppContext);
@@ -202,6 +211,7 @@ const CheckoutForm = (props) => {
   const [isFetchingBillingStates, setIsFetchingBillingStates] = useState(false);
   const [isStripeOrderProcessing, setIsStripeOrderProcessing] = useState(false);
   const [createdOrderData, setCreatedOrderData] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
 
   // Get Cart Data.
   const { data } = useQuery(GET_CART, {
@@ -216,19 +226,22 @@ const CheckoutForm = (props) => {
       // }
 
       // Update cart data in React Context.
-    },
+    }
   });
 
   const [checkout, { data: checkoutResponse, loading: checkoutLoading }] =
     useMutation(CHECKOUT_MUTATION, {
+      onCompleted: () => {
+        setShowAlert(true);
+      },
       variables: {
-        input: orderData,
+        input: orderData
       },
       onError: (error) => {
         if (error) {
           setRequestError(error?.graphQLErrors?.[0]?.message ?? "");
         }
-      },
+      }
     });
   const [clearCartMutation] = useMutation(CLEAR_CART_MUTATION);
   const handleFormSubmit = async (event) => {
@@ -259,8 +272,8 @@ const CheckoutForm = (props) => {
         billing: { ...input.billing, errors: billingValidationResult.errors },
         shipping: {
           ...input.shipping,
-          errors: shippingValidationResult.errors,
-        },
+          errors: shippingValidationResult.errors
+        }
       });
       return;
     }
@@ -311,7 +324,7 @@ const CheckoutForm = (props) => {
   const handleShippingChange = async (target) => {
     const newState = {
       ...input,
-      shipping: { ...input?.shipping, [target.name]: target.value },
+      shipping: { ...input?.shipping, [target.name]: target.value }
     };
     setInput(newState);
     // await setStatesForCountry(
@@ -324,7 +337,7 @@ const CheckoutForm = (props) => {
   const handleBillingChange = async (target) => {
     const newState = {
       ...input,
-      billing: { ...input?.billing, [target.name]: target.value },
+      billing: { ...input?.billing, [target.name]: target.value }
     };
     setInput(newState);
     await setStatesForCountry(
@@ -344,6 +357,9 @@ const CheckoutForm = (props) => {
     FetchData();
   }, [orderData]);
   const isOrderProcessing = checkoutLoading || isStripeOrderProcessing;
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
 
   return (
     <Box>
@@ -424,6 +440,20 @@ const CheckoutForm = (props) => {
                 {requestError && (
                   <p>Error : {requestError} : Please try again</p>
                 )}
+                <Snackbar
+                  open={showAlert}
+                  autoHideDuration={5000}
+                  onClose={handleCloseAlert}
+                >
+                  <Alert
+                    variant="filled"
+                    severity="success"
+                    onClose={handleCloseAlert}
+                    sx={{ width: "100%" }}
+                  >
+                    Order Successfully!
+                  </Alert>
+                </Snackbar>
               </Box>
             </Grid>
           </Grid>
